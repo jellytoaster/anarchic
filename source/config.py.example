@@ -1,3 +1,7 @@
+# Hi there! You'll need to rename "config.py.example"
+# to just "config.py" once you're done setting up
+# the values. Otherwise, the bot will crash.
+
 TOKEN = "enter token here"
 PREFIX = ">"
 
