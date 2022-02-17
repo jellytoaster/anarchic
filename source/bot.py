@@ -1,14 +1,12 @@
 # -*- coding: UTF-8 -*-
 
 import asyncio
-from pickle import FALSE
 import disnake as disnake
 from disnake.ext import commands, tasks
 import datetime
 import json
 import string
 import re
-import demoji
 import time
 import copy
 import os
@@ -24,7 +22,6 @@ from disnake import Option, ButtonStyle, OptionType, SelectOption, SelectMenu, O
 from disnake.ui import Button
 from disnake.ext.commands import errors, MissingPermissions, BadArgument, MissingRequiredArgument, CommandNotFound
 from disnake.reaction import Reaction
-from disnake.utils import get
 from enum import Enum
 from datetime import timedelta
 from disnake.interactions.application_command import ApplicationCommandInteraction
@@ -121,29 +118,6 @@ class Player(object):
                 return value
         
         return None
-
-class Logger():
-    def log(text:str, logtype:LogType=LogType.LOG):
-        thing = ""
-        if (logtype == LogType.INFO):
-            thing = "INFO"
-        if (logtype == LogType.WARNING):
-            thing = "WARNING"
-        if (logtype == LogType.LOG):
-            thing = "LOG"
-        if (logtype == LogType.ERROR):
-            thing = "ERROR"
-        if (logtype == LogType.DEBUG):
-            thing = "DEBUG"
-
-        now = datetime.now()
-        time = now.strftime("%H:%M:%S")
-
-        f = open("log.log", "w")
-        f.write(f"{time} [{thing}] : {text}")
-        f.close()
-
-        # os.chdir(cwd)
 
 achivements = []
 
@@ -682,6 +656,7 @@ async def on_ready():
     game = disnake.Activity(type=disnake.ActivityType.watching, name="chaos | /help")
     await bot.change_presence(status=disnake.Status.do_not_disturb, activity=game)
     try:
+        #Start the shopupdater, if it doesn't work just dont do anythin
         shopUpdater.start()
     except:
         pass
