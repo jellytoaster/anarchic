@@ -335,7 +335,8 @@ async def shopUpdater():
 
 intents = disnake.Intents.all()
 bot = commands.Bot(command_prefix=config.PREFIX, intents=intents, case_insensitive=True)
-bot.topggpy = topgg.DBLClient(bot, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4NzExODMwOTgyNzQzMjQ3OCIsImJvdCI6dHJ1ZSwiaWF0IjoxNjM3NDI2MzA2fQ.k8ufWIHlJIeK1xgpXPWlm1LswoKyb5-r86gkcMOjqgg")
+if (config.TOPGG_TOKEN != ""):
+    bot.topggpy = topgg.DBLClient(bot, config.TOPGG_TOKEN)
 logging.basicConfig(level=logging.WARNING)
 
 def tryGetValue(id:int, value):
