@@ -18,6 +18,7 @@ import aiohttp
 import requests
 import topgg
 import logging
+import config
 from datetime import datetime
 from disnake import Option, ButtonStyle, OptionType, SelectOption, SelectMenu, OptionChoice, ActionRow, MessageInteraction
 from disnake.ui import Button
@@ -352,7 +353,7 @@ async def shopUpdater():
         json.dump(guilds, jsonf)
 
 intents = disnake.Intents.all()
-bot = commands.Bot(command_prefix=">", intents=intents, case_insensitive=True)
+bot = commands.Bot(command_prefix=config.PREFIX, intents=intents, case_insensitive=True)
 bot.topggpy = topgg.DBLClient(bot, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4NzExODMwOTgyNzQzMjQ3OCIsImJvdCI6dHJ1ZSwiaWF0IjoxNjM3NDI2MzA2fQ.k8ufWIHlJIeK1xgpXPWlm1LswoKyb5-r86gkcMOjqgg")
 logging.basicConfig(level=logging.WARNING)
 
@@ -8722,6 +8723,6 @@ async def supergive(ctx, user:disnake.Member, amount):
 
 
 try:
-    bot.run("TOKEN")
+    bot.run(config.TOKEN)
 except aiohttp.client_exceptions.ClientConnectorError:
     print("Internet Error")
