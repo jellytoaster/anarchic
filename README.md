@@ -207,4 +207,4 @@ To build the bot and use it for yourself, you need to have the dependencies from
 
 Copy the example config file in the source folder and rename it to `config.py`, change the desired settings, and you're good to go!
 
-❗ **NOTE: Even though this project is open-source, you are not allowed to go around and claim it is yours.**
+❗ **NOTE: HAH! We have a license, you don't want to get sued, do you? Then don't steal without credit!**
