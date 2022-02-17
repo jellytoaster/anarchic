@@ -66,6 +66,13 @@ A skilled observer who keeps an eye on the evils
 - You can watch over a player each night
 - You will learn who visits your target
 
+### Tracker 🔦 (PRE-RELEASE)
+**Faction: Town**
+
+A skilled pathfinder who scouts the night.
+
+- Track a player each night
+- You will know who your target visits
 
 ### Doctor 🧑‍⚕️
 **Faction: Town**
@@ -96,6 +103,14 @@ The leader of the town.
 
 - You may reveal yourself as **Mayor** to the rest of the town
 - You will have 3 votes on all voting procedures once you reveal
+
+### Attendant 🍷 (PRE-RELEASE)
+**Faction: Town**
+
+A distracting companion with a soothing aura
+
+- Distract a player each night
+- You are immune to distractions
 
 
 ## Mafia :wilted_flower:
@@ -135,6 +150,15 @@ A hooker who works for organized crime
 - Distract a player each night
 - You are immune to **distractions**
 
+### Janitor 🧹 (PRE-RELEASE)
+**Faction: Mafia**
+
+A tired custodian who cleans up bodies.
+
+- Clean a player at night, with only 3 charges
+- If your target dies that night, their role, will, and cause of death will be hidden to the rest of the town
+- You will learn the cleaned target's role, will, and cause of death
+
 ## Neutral 🪓
 The neutrals. They are their own faction, and they have their own win condition.
 
@@ -156,6 +180,14 @@ An obsessed executioner who wants a certain someone killed in front of the town.
 **You will be assigned a player that is a member of the Town :house:. Your goal is to get them lynched, not kill them.**
 
 - If your target is killed at night, you will become a **Jester** :clown_face:
+
+### Psychopath 🔪 (PRE-RELEASE)
+
+A bloodthirsty killer who wishes to dye the town in blood.
+
+**Your goal: Kill everyone in the Town.**
+
+- You can become **cautious** or **incautious**
 
 # FAQ
 Q: Are there questions here?
