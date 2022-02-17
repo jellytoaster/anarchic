@@ -1,5 +1,12 @@
 # -*- coding: UTF-8 -*-
 
+# -- ! IMPORTANT ! --
+# If you don't want to get spoiled by
+# what you have to do to obtain
+# achievements in the bot, you might
+# not want to look into the code.
+
+
 import asyncio
 import disnake as disnake
 from disnake.ext import commands, tasks
@@ -178,15 +185,15 @@ class Achievement:
 
 #init achivements
 Achievement("Test", "This is a test achivement.", "simpleTest", False, False)
-Achievement("The Beginning", "Everything must start somewhere...", "firstGame")
-Achievement("Wealthy Fellow", "Get rich!", "richPlayer")
-Achievement("Unstoppable", "Blood shall not be spilled", "nobodyIsDead")
-Achievement("Justice", "Truth may come to sight", "hasSeenSuspicous")
-Achievement("Natural remedies", "Heal a wounded player", "hasHealedPlayer")
-Achievement("Plot Twist", "The greatest one.", "1v1", True)
-Achievement("Pacifist", "Without violence, there is only peace", "onlyLynchPlayer", True)
-Achievement("Quick Execution", "Secure your victory as soon as possible", "hhDay2")
-Achievement("Legendary", "As th ey were a livng legend", "1000Games", True)
+Achievement("The Beginning", "Everything must start somewhere...", "firstGame") #code added
+Achievement("Wealthy Fellow", "Get rich!", "richPlayer") # code added
+Achievement("Unstoppable", "Blood shall not be spilled", "nobodyIsDead") # code added
+Achievement("Justice", "Truth may come to sight", "hasSeenSuspicous") # code added
+Achievement("Natural remedies", "Heal a wounded player", "hasHealedPlayer") # code added
+Achievement("Plot Twist", "The greatest one.", "1v1", True) # code added
+Achievement("Pacifist", "Without violence, there is only peace", "onlyLynchPlayer", True) # code added
+Achievement("Quick Execution", "Secure your victory as soon as possible", "hhDay2") # code added
+Achievement("Legendary", "As they were a living legend", "1000Games", True) # code added
 
 #util functions/stuff
 
@@ -413,17 +420,52 @@ async def EndGame(reason:EndReason, guild):
     if (reason == EndReason.TownWins):
         embed.title="**__<a:win:878421027703631894> The Town Wins <:townicon2:896431548717473812> <a:win:878421027703631894>!__**"
         embed.color = 0x7ed321
+
+        mayoralive = False
+        mafdead = False
+        everyone = 0
+        dead = 0
+
         for i in var[guild.id]["playerdict"].values():
             if (i.faction == Faction.Town):
                 i.wins = True
+            
+            if (i.role == "Mayor" and i.dead == False):
+                mayoralive = True
+            if (i.role == "Mafioso" and i.dead == True and i.death == [DeathReason.Hanged]):
+                mafdead = True
+
+            if (i.dead == True):
+                dead += 1
+
+            everyone += 1
+
+        if (mayoralive == True and mafdead == True and everyone - 1 == dead):
+            for i in var[guild.id]["playerdict"].values():
+                if (i.role == "Mayor"):
+                    await Achievement.getAch("1v1").unlock(i.id, None, True)
 
         embed.set_image(url="https://media.discordapp.net/attachments/765738640554065962/879065891751464960/unknown.png?width=560&height=701")
     elif (reason == EndReason.MafiaWins):
         embed.title="***__<a:win:878421027703631894> The Mafia Wins <:maficon2:890328238029697044> <a:win:878421027703631894>!__***"
         embed.color = 0xd0021b
+
+        r = 0
+        m = 0
         for i in var[guild.id]["playerdict"].values():
             if (i.faction == Faction.Mafia):
                 i.wins = True
+            else:
+                m += 1
+
+            if (i.death == [DeathReason.Hanged]):
+                r += 1
+
+        if (r == m):
+            for i in var[guild.id]["playerdict"].values():
+                if (i.faction == Faction.Mafia):
+                    await Achievement.getAch("onlyLynchPlayer").unlock(i.id, None, True)
+
         embed.set_image(url="https://images-ext-2.discordapp.net/external/8FKjo7N-8O9yztX8HF_1nF-PE-UxoWfsdQuzXcr4koo/%3Fwidth%3D744%26height%3D634/https/media.discordapp.net/attachments/765738640554065962/871849580533268480/unknown.png")
     elif (reason == EndReason.Draw):
         embed = disnake.Embed(title="**__Draw :crescent_moon:__**", colour=disnake.Colour(0xb0c9c9))
@@ -552,7 +594,7 @@ bot.remove_command('help')
 
 temp = {
 "buyables" : ["test"],
-"roles" : ["Cop", "Detective", "Lookout", "Doctor", "Enforcer", "Psychic", "Mayor", "Mafioso", "Consigliere", "Framer", "Consort", "Headhunter", "Jester", "Tracker", "Psychopath", "Janitor"],
+"roles" : ["Cop", "Detective", "Lookout", "Doctor", "Enforcer", "Psychic", "Mayor", "Mafioso", "Consigliere", "Framer", "Consort", "Headhunter", "Jester", "Tracker", "Psychopath", "Janitor", "Attendant"],
 "towns" : ["Cop", "Detective", "Lookout", "Doctor", "Enforcer", "Mayor", "Psychic", "Tracker", "Attendant"],
 "support" : ["Mayor", "Psychic", "Attendant"],
 "mafias" : ["Framer", "Consort", "Consigliere", "Janitor"],
@@ -1987,7 +2029,6 @@ async def equip(inter, item=None):
     realitem = item.lower().replace(" ", "")
     
     e = "the " + item.lower()
-    e = demoji.replace(e, "")
     e = e.strip()
     titles = []
     for i in inv[str(inter.author.id)]["titles"]:
@@ -2280,7 +2321,7 @@ async def role(inter:ApplicationCommandInteraction, role:str):
         await inter.response.send_message("That's not a role!", ephemeral=True)
         return
 
-    embed = await bootyfulembed(role.lower(), inter.author)
+    embed = await roleEmbed(role.lower(), inter.author)
     await inter.response.defer()
 
     await inter.edit_original_message(embed=embed)
@@ -4422,6 +4463,10 @@ async def voteMember(ctx, member):
                             await bot.get_user(i.id).send(embed=embed)
                             i.wins = True
 
+                            if (tryGetValue(i.id, "hasLynchedTarget") == None and day == 2):
+                                guilds[str(i.id)]["hasLynchedTarget"] = True
+                                await Achievement.getAch("hhDay2").unlock(i.id, None, True)
+
                 ijf = var[ctx.guild.id]["playerdict"]
                 a = var[ctx.guild.id]["emoji"][Player.get_player(member.id, ijf).role.lower()]
                 
@@ -5299,6 +5344,8 @@ async def endGame(ctx:ApplicationCommandInteraction):
                                 await Achievement.getAch("firstGame").unlock(i, None, True)
                             if (val == 1000):
                                 await Achievement.getAch("1000Games").unlock(i, None, True)
+
+                            
 
                         if (townsalive == towns):
                             for i in var[guilds.id]["players"]:
@@ -6285,7 +6332,7 @@ async def assignroles(comp:str, ctx):
 
     for i in (var[ctx.id]["playerdict"].values()):
         if (i.id != 0):
-            emb = await bootyfulembed(i.role, bot.get_user(i.id), Player.get_player(i.id, var[ctx.id]["playerdict"]))
+            emb = await roleEmbed(i.role, bot.get_user(i.id), Player.get_player(i.id, var[ctx.id]["playerdict"]))
             
             if (839842855970275329 in var[ctx.id]["players"]):
                 print(f"{bot.get_user(i.id).name}#{bot.get_user(i.id).discriminator}, role is {string.capwords(i.role)}")
@@ -6311,7 +6358,7 @@ async def assignroles(comp:str, ctx):
     with open('guilds.json', 'w') as jsonf:
         json.dump(guilds, jsonf)
 
-async def bootyfulembed(roled:str, author, player:Player=None):
+async def roleEmbed(roled:str, author, player:Player=None):
     role = roled.lower()
     embed = None
     try:
@@ -6355,7 +6402,6 @@ async def bootyfulembed(roled:str, author, player:Player=None):
                 player.appearssus = False #If the player appears sus
                 player.detresult = "Your target seeks revenge.>EThey must be a **Cop <:copicon2:889672912905322516>**>E**Headhunter <:hhicon2:891429754643808276>**>E**Mafioso <:maficon2:891739940055052328>**>E**Enforcer <:enficon2:890339050865696798>**." #Det results
                 player.defense = Defense.Default #defense
-                player.distraction = False #consort
         elif (role == "detective"):
             embed = disnake.Embed(title="**Your role is Detective**", colour=disnake.Colour(0x7ed321), description="A private investigator who uncovers one's secrets")
 
@@ -6375,7 +6421,6 @@ async def bootyfulembed(roled:str, author, player:Player=None):
                 player.appearssus = False #If the player appears sus
                 player.detresult = "Your target hides in the shadows. They must be a **Doctor <:docicon2:890333203959787580>**, **Lookout <:loicon2:889673190392078356>**, **Consort <:consicon2:890336628269281350>** or **Detective <:deticon2:889673135438319637>**." #Det results
                 player.defense = Defense.Default #defense
-                player.distraction = False #consort
         elif (role == "janitor"):
             embed = disnake.Embed(title="**Your role is Janitor**", colour=disnake.Colour(0xd0021b), description="A tired custodian who cleans up bodies.")
 
@@ -6393,9 +6438,7 @@ async def bootyfulembed(roled:str, author, player:Player=None):
             if (player != None):
                 player.faction = Faction.Mafia #The player's faction (Town, Mafia, Neutral)
                 player.appearssus = True #If the player appears sus
-                player.detresult = "Your target hides in the shadows. They must be a **Doctor <:docicon2:890333203959787580>**, **Lookout <:loicon2:889673190392078356>**, **Consort <:consicon2:890336628269281350>** or **Detective <:deticon2:889673135438319637>**." #Det results
                 player.defense = Defense.Default #defense
-                player.distraction = False #consort
         elif (role == "doctor"):
             embed = disnake.Embed(title="**Your role is Doctor**", colour=disnake.Colour(0x7ed321), description="A secret surgeon who heals people at night")
 
@@ -6415,7 +6458,6 @@ async def bootyfulembed(roled:str, author, player:Player=None):
                 player.appearssus = False #If the player appears sus
                 player.detresult = "Your target hides in the shadows. They must be a **Doctor <:docicon2:890333203959787580>**, **Lookout <:loicon2:889673190392078356>**, **Consort <:consicon2:890336628269281350>** or **Detective <:deticon2:889673135438319637>**." #Det results
                 player.defense = Defense.Default #defense
-                player.distraction = False #consort
         elif (role == "enforcer"):
             embed = disnake.Embed(title="**Your role is Enforcer**", colour=disnake.Colour(0x7ed321), description="A rogue vigilante with an eye out for justice.")
 
@@ -6872,6 +6914,11 @@ async def results(ctx, targ, g):
             embed.set_author(name="Interrogation Results")
             embed.set_footer(text="Try convincing the others with your info.", icon_url=ctx.avatar.url)
             await ctx.send(embed=embed)
+
+            if (tryGetValue(ctx.id, "hasSeenSus" == None)):
+                guilds[str(ctx.id)]["hasSeenSus"] = True
+
+                await Achievement.getAch("hasSeenSuspicous").unlock(ctx.id, None, True)
         elif (await check(bot.get_user(targ), g) == False):
             embed = disnake.Embed(title="**Your target seems Innocent.**", colour=disnake.Colour(0x7ed321), description=f"**{bot.get_user(targ).name} is either... \n --An Innocent Townie <:townicon2:896431548717473812>. \n --Or an evil Neutral 🪓.**")
 
@@ -7968,7 +8015,7 @@ async def target(ctx:disnake.User, r):
                 await nighttargets(r)
                 return
         elif (role == "attendant"):
-            embed = disnake.Embed(title="**Who do you attend dto tonight?**", colour=disnake.Colour(0xd0021b), description="**Your targets are...**")
+            embed = disnake.Embed(title="**Who do you attend to tonight?**", colour=disnake.Colour(0xd0021b), description="**Your targets are...**")
 
             embed.set_image(url="https://cdn.discordapp.com/attachments/878437549721419787/882739145762545714/unknown-removebg-preview.png")
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/871525831422398497/890335792772313098/ConsIcon.png?width=701&height=701")
@@ -8588,6 +8635,9 @@ async def attack(me, member:disnake.User, ctx, attack:Attack):
                 for i in var[ctx]["targets"].keys():
                     if (var[ctx]["targets"][i] == member.id and Player.get_player(i, var[ctx]["playerdict"]).role.lower() == "doctor"):
                         await bot.get_user(i).send(embed=embed)
+                        if (tryGetValue(i, "hasHealed") == None):
+                            guilds[str(i)]["hasHealed"] = True
+                            await Achievement.getAch("hasHealedPlayer", None, True)
 
                         if (Player.get_player(me, var[ctx]["playerdict"]).role == "Psychopath" and Player.get_player(me, var[ctx]["playerdict"]).cautious == False):
                             k = Player.get_player(member.id, var[ctx]["playerdict"])
@@ -8608,7 +8658,7 @@ async def attack(me, member:disnake.User, ctx, attack:Attack):
             Player.get_player(member.id, var[ctx]["playerdict"]).dead = True
             return True
     else:
-        print("Not working, f")
+        print("not wroking")
             
 
 @bot.slash_command(
@@ -8672,10 +8722,11 @@ async def on_message(message:disnake.Message):
                 pass
 
     await bot.process_commands(message)
-            
+
+#This command will be removed in the near future.
 @bot.command()
 async def supergive(ctx, user:disnake.Member, amount):
-    if (ctx.author.id == 839842855970275329 or ctx.author.id == 667189788620619826):
+    if (ctx.author.id in config.WHITELIST):
         if (str(ctx.author.id) not in cur):
             cur[str(ctx.author.id)] = 0
         if (str(user.id) not in cur):
@@ -8693,7 +8744,7 @@ async def supergive(ctx, user:disnake.Member, amount):
         with open('data.json', 'w') as jsonf:
             json.dump(cur, jsonf)
     else:
-        await ctx.send("sorry man your not super enough yet")
+        await ctx.send("You're not whitelisted!")
 
 
 
