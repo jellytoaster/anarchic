@@ -66,7 +66,7 @@ A skilled observer who keeps an eye on the evils
 - You can watch over a player each night
 - You will learn who visits your target
 
-### Tracker 🔦 (PRE-RELEASE)
+### Tracker 🔦 (NEW)
 **Faction: Town**
 
 A skilled pathfinder who scouts the night.
@@ -104,7 +104,7 @@ The leader of the town.
 - You may reveal yourself as **Mayor** to the rest of the town
 - You will have 3 votes on all voting procedures once you reveal
 
-### Attendant 🍷 (PRE-RELEASE)
+### Attendant 🍷 (NEW)
 **Faction: Town**
 
 A distracting companion with a soothing aura
@@ -150,7 +150,7 @@ A hooker who works for organized crime
 - Distract a player each night
 - You are immune to **distractions**
 
-### Janitor 🧹 (PRE-RELEASE)
+### Janitor 🧹 (NEW)
 **Faction: Mafia**
 
 A tired custodian who cleans up bodies.
@@ -181,7 +181,7 @@ An obsessed executioner who wants a certain someone killed in front of the town.
 
 - If your target is killed at night, you will become a **Jester** :clown_face:
 
-### Psychopath 🔪 (PRE-RELEASE)
+### Psychopath 🔪 (NEW)
 
 A bloodthirsty killer who wishes to dye the town in blood.
 
