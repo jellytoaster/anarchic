@@ -1,6 +1,8 @@
 # Anarchic :fire:
 A feature rich Discord bot including party, economy, and voting features with 17 different [roles](#roles) you can play with!
 
+# ANARCHIC IS BEING REWRITTEN! Expect updates soon :)
+
 ### Invite the bot [here](https://discord.com/api/oauth2/authorize?client_id=887118309827432478&permissions=105696980048&scope=bot%20applications.commands)
 <p align="center" width="100%">
   <a href="https://discord.gg/ApvrUsXFxk"><img src="./images/jointhediscord.png"></a>
