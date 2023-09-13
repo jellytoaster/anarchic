@@ -1,9 +1,11 @@
 import disnake
+import classes.errorhandler
 import random
 import utils
 import classes.game
 import cogs.gameplay.night
 import asyncio
+import disnake.ext.commands.errors as error
 import copy
 import classes.enums
 from classes import player, role
@@ -60,6 +62,10 @@ async def genChannels(game:classes.game.Game):
     game.rolePlayer = await utils.createRoleIfNotExist(game.guild, "[Anarchic] Player")
     game.roleDead = await utils.createRoleIfNotExist(game.guild, "[Anarchic] Dead")
 
+    for i in game.guild.members:
+        if (game.rolePlayer in i.roles):
+            await i.remove_roles(game.rolePlayer)
+
     for i in game.players:
         i:disnake.Member
         await i.add_roles(game.rolePlayer)
@@ -103,14 +109,16 @@ async def genChannels(game:classes.game.Game):
 
 
 async def prep(game:classes.game.Game):
-    assignRoles(game)
-    await asyncio.sleep(2)
-    await genChannels(game)
-    
-    await sendRoles(game)
-    player.Player.initPlayerVars(game)
-
-
+    try:
+        assignRoles(game)
+        await asyncio.sleep(2)
+        await genChannels(game)
+        
+        await sendRoles(game)
+        player.Player.initPlayerVars(game)
+    except Exception as e:
+        await classes.errorhandler.handle(game.channelTownSquare, e)
+        await utils.finishGame(game)
 
 async def start(game:classes.game.Game):
     game.dayNum += 1

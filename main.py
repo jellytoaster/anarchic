@@ -28,4 +28,4 @@ bot.add_cog(cogs.endGame.endGame(bot))
 bot.add_cog(cogs.basic.basic(bot))
 
 print("Connecting to Discord")
-bot.run(config.TOKEN)
+bot.run(config.BETATOKEN)

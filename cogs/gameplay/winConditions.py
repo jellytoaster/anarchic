@@ -13,7 +13,6 @@ async def checkForWin(game:classes.game.Game):
 
 
     if (len(differentFactions) <= 1):
-        game.finished = True
         embed = disnake.Embed()
 
         if (len(differentFactions) == 0):
@@ -80,8 +79,4 @@ async def checkForWin(game:classes.game.Game):
         await game.channelStartChannel.send(embed=embed)
             
         # Free all channels
-        await utils.modifySendPermissions(game.channelTownSquare, game, dead=True, alive=True)
-        await utils.modifyReadPermissoins(game.channelGraveyard, game, dead=True, alive=True)
-        await utils.modifySendPermissions(game.channelGraveyard, game, dead=True, alive=True)
-        await utils.modifyReadPermissoins(game.channelMafia, game, dead=True,alive=True)
-        await utils.modifySendPermissions(game.channelMafia, game, dead=True,alive=True)
+        await utils.finishGame(game)

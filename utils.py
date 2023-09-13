@@ -185,3 +185,26 @@ def chargeCount(charges):
     
 def true(game):
     return True
+
+def errorToText(errorStr:str):
+    errorStr = errorStr.lower()
+    if ("403" in errorStr):
+        return "This can happen because either the bot does not have enough permissions to perform actions or the bot has been blocked by a user and a DM cannot be sent."
+    else:
+        return "This error is undocumented and has been automatically reported to the developers."
+
+def errorToFix(errorStr:str):
+    errorStr = errorStr.lower()
+    if ("403" in errorStr):
+        return "- Check the permissions the bot has\n- Make sure the bot has not been blocked by any user"
+    else:
+        return "- Wait until a fix has been applied"
+    
+async def finishGame(game:classes.game.Game):
+    game.finished = True
+
+    await modifySendPermissions(game.channelTownSquare, game, dead=True, alive=True)
+    await modifyReadPermissoins(game.channelGraveyard, game, dead=True, alive=True)
+    await modifySendPermissions(game.channelGraveyard, game, dead=True, alive=True)
+    await modifyReadPermissoins(game.channelMafia, game, dead=True,alive=True)
+    await modifySendPermissions(game.channelMafia, game, dead=True,alive=True)
