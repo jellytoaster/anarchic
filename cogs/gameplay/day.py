@@ -12,6 +12,24 @@ async def dayCycle(game:classes.game.Game):
         global isAccusation
         isAccusation = False
         game.dayNum += 1
+
+        # Kill players if there is nobody dead for 3 days
+        deadPlayers = []
+        for i in game.playervar:
+            i:classes.player.Player
+            if (i.dead and i.deathReason != None):
+                game.daysWithoutDeath = 0
+                deadPlayers.append(i)
+
+        if (i == []):
+            game.daysWithoutDeath += 1
+
+        if (game.daysWithoutDeath == 3):
+            for i in game.playervar:
+                i.classes.player.Player
+                await i.kill(classes.enums.DeathReason.Plague, True)
+
+
         embed = disnake.Embed(title=f"It Is Day {game.dayNum} ☀️", color=disnake.Colour((0x7ed321)))
         
         embed.set_image(url="https://images-ext-2.discordapp.net/external/8cFuWNzv5vDa4TbO68gg5Up4DSxguodCGurCAtDpWgU/%3Fwidth%3D936%26height%3D701/https/media.discordapp.net/attachments/765738640554065962/878068703672016968/unknown.png")
@@ -53,6 +71,12 @@ async def dayCycle(game:classes.game.Game):
             return
         
         # check for a plageuw
+        if (game.daysWithoutDeath == 2):
+            embed = disnake.Embed(title="A plague has swept the town!", colour=disnake.Colour(0xb8e986), description="If no player **dies** by the next day, the **Plague** will **kill** everyone in the Town")
+
+            embed.set_footer(text="Good Luck")
+            await game.channelTownSquare.send(embed=embed)
+            await asyncio.sleep(2)
 
         embed = disnake.Embed(title=f"`Day {str(game.dayNum)} ☀️ | Dawn Phase`", colour=disnake.Colour(0xbbf6ff), description="The sun is shining as another beautiful day begins\n```json\nDawn ends in 20 seconds```")
         embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1008839043192213686.webp?size=96&quality=lossless")

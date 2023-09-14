@@ -26,6 +26,7 @@ class Game():
         self.roleDead = None
         self.dayNum = 0
         self.finished = False
+        self.daysWithoutDeath = 0
 
     def reset(self):
         self.playervar:list(player.Player) = []
@@ -37,6 +38,7 @@ class Game():
         self.roleDead = None
         self.dayNum = 0
         self.finished = False
+        self.daysWithoutDeath = 0
 
 
     def findGuildGame(id:int):

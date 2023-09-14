@@ -120,13 +120,13 @@ def reasonToText(reason:classes.enums.DeathReason, mention):
     if (reason == classes.enums.DeathReason.Mafia):
         return f"{mention} was **attacked by the Mafia** <:mafia:1007768566789050378>"
     if (reason == classes.enums.DeathReason.Enforcer):
-        return f"{mention} **shot by a Vigilante** <:vgicon:890339050865696798>"
+        return f"{mention} was **shot by a Vigilante** <:vgicon:890339050865696798>"
     # # if (reason == DeathReason.Guilt):
     # #     return "They died from **Guilt**."
     # if (reason == DeathReason.Jester):
     #     return "**killed over lynching the Jester** <:jesticon2:889968373612560394>."
-    # if (reason == DeathReason.Plague):
-    #     return f"{mention} **taken by the Plague**."
+    if (reason == classes.enums.DeathReason.Plague):
+        return f"{mention} was **taken by the Plague**."
     # if (reason == DeathReason.Bodyguard):
     #     return "**killed by a Bodyguard**. <:bgicon:1018521495439429702>"
     # if (reason == DeathReason.WhileGuarding):

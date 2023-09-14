@@ -6,6 +6,7 @@ import classes.enums
 deathEmbeds = {classes.enums.DeathReason.Mafia : disnake.Embed(title="**You were attacked by a member of the Mafia**", colour=disnake.Colour(0xd0021b), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/890328238029697044.png?size=80"),
                classes.enums.DeathReason.Enforcer : disnake.Embed(title="**You were eliminated by a Vigilante**", colour=disnake.Colour(0x7ed321), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/890339050865696798.webp?size=96&quality=lossless"),
                classes.enums.DeathReason.Lynch : disnake.Embed(title="ur lycnhc", description="a"),
+               classes.enums.DeathReason.Plague : disnake.Embed(title="**You were taken by the Plague**", colour=disnake.Colour(0xb8e986), description="**You have died <:rip:878415658885480468>**"),
                classes.enums.DeathReason.Unknown : disnake.Embed(title="You died to an unknown reason")}
 
 class Player():

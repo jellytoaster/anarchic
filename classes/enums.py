@@ -30,3 +30,4 @@ class DeathReason(Enum):
     Mafia = 1
     Enforcer = 2
     Lynch = 3
+    Plague = 4
