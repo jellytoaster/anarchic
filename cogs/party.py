@@ -23,9 +23,11 @@ class PartyCog(commands.Cog):
 
 
         onlinePlayers = 0
+
         for i in game.players:
+            print(i.status)
             i:disnake.Member
-            if (i.status != disnake.Status.offline):
+            if (i.raw_status != "offline"):
                 onlinePlayers += 1
 
         embed.set_footer(text=f"{onlinePlayers}/{len(game.players)} players online", icon_url=inter.author.avatar.url)
@@ -150,6 +152,8 @@ class PartyCog(commands.Cog):
 
             def __init__(self) -> None:
                 super().__init__()
+
+        await asyncio.sleep(2)
 
         await inter.edit_original_message(embed=embed, view=HelpView())
 
