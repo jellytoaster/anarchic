@@ -6,7 +6,7 @@ from classes.role import Role
 from cogs import party, setupManagement, admin, endGame, basic
 from disnake.ext import commands
 
-bot = commands.AutoShardedBot(intents=disnake.Intents(message_content=True,guilds=True),command_prefix=config.PREFIX, shard_count=10)
+bot = commands.AutoShardedBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
 
 @bot.event
 async def on_ready():
