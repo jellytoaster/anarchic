@@ -21,6 +21,15 @@ class PartyCog(commands.Cog):
         embed = disnake.Embed(title=f"{game.players[0].name}'s Party", description=f"**Current Players:** `{str(len(game.players))}`\n{game.genPlayerList()}", colour=disnake.Colour(0x8ef3ff))
         embed.set_thumbnail(url=inter.guild.icon.url)
 
+
+        onlinePlayers = 0
+        for i in game.players:
+            i:disnake.Member
+            if (i.status != disnake.Status.offline):
+                onlinePlayers += 1
+
+        embed.set_footer(text=f"{onlinePlayers}/{len(game.players)} players online", icon_url=inter.author.avatar.url)
+
         await inter.response.send_message(embed=embed)
     @commands.slash_command(name="join", description="Join the game!")
     async def join(self, inter:disnake.ApplicationCommandInteraction):
