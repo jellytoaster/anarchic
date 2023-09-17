@@ -1,11 +1,12 @@
 import disnake
+import time
 import config
 import cogs
 from classes.role import Role
 from cogs import party, setupManagement, admin, endGame, basic
 from disnake.ext import commands
 
-bot = commands.Bot(intents=disnake.Intents(message_content=True,guilds=True),command_prefix=config.PREFIX)
+bot = commands.AutoShardedBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
 
 @bot.event
 async def on_ready():
@@ -13,6 +14,7 @@ async def on_ready():
     print(bot.user.name)
     print("With an ID of " + str(bot.user.id))
     print('------')
+    print("Login time in epoch: ", time.time())
     game = disnake.Activity(type=disnake.ActivityType.watching, name="chaos | /help")
     await bot.change_presence(activity=game, status=disnake.Status.do_not_disturb)
 
