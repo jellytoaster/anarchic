@@ -20,13 +20,14 @@ class Game():
         self.setupData:setupData.SetupData = setupData.SetupData(self)
         self.channelTownSquare = None
         self.channelStartChannel = None
-        self.channelMafia = None
+        self.channelMafia:disnake.TextChannel = None
         self.channelGraveyard = None
         self.rolePlayer = None
         self.roleDead = None
         self.dayNum = 0
         self.finished = False
         self.daysWithoutDeath = 0
+        self.accusedPlayer = None
 
     def reset(self):
         self.playervar:list(player.Player) = []
@@ -39,6 +40,7 @@ class Game():
         self.dayNum = 0
         self.finished = False
         self.daysWithoutDeath = 0
+        self.accusedPlayer = None
 
 
     def findGuildGame(id:int):

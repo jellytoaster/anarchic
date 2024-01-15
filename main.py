@@ -1,12 +1,13 @@
 import disnake
 import time
+import os
 import config
 import cogs
 from classes.role import Role
-from cogs import party, setupManagement, admin, endGame, basic
+from cogs import party, setupManagement, admin, endGame, basic, help
 from disnake.ext import commands
 
-bot = commands.AutoShardedBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
+bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
 
 @bot.event
 async def on_ready():
@@ -18,6 +19,7 @@ async def on_ready():
     game = disnake.Activity(type=disnake.ActivityType.watching, name="chaos | /help")
     await bot.change_presence(activity=game, status=disnake.Status.do_not_disturb)
 
+os.system("cls")
 
 print("Initializing roles")
 Role.init()
@@ -28,6 +30,7 @@ bot.add_cog(cogs.setupManagement.setupManagement(bot))
 bot.add_cog(cogs.admin.adminCommands(bot))
 bot.add_cog(cogs.endGame.endGame(bot))
 bot.add_cog(cogs.basic.basic(bot))
+bot.add_cog(cogs.help.HelpCog(bot))
 
 print("Connecting to Discord")
 bot.run(config.BETATOKEN)

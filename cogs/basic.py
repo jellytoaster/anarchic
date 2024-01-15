@@ -6,10 +6,6 @@ class basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.slash_command(name="help", description="Get help about the bot")
-    async def help(self, inter:disnake.ApplicationCommandInteraction):
-        await inter.response.send_message("the content here", ephemeral=True)
-
     @commands.slash_command(name="roles", description="Get a description of every role in Anarchic")
     async def roles(self, inter: disnake.ApplicationCommandInteraction):
         import classes.role

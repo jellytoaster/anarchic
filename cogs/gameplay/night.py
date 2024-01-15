@@ -6,6 +6,7 @@ import classes.player
 from disnake.interactions import MessageInteraction
 import classes.game
 import classes.role
+import classes.errorhandler
 import classes.enums
 import utils
 
@@ -13,6 +14,9 @@ async def nightCycle(game:classes.game.Game):
     await cogs.gameplay.winConditions.checkForWin(game)
     if (game.finished):
         return
+    
+    await utils.modifySendPermissions(game.channelMafia, game, dead=False,alive=True)
+
     embed = disnake.Embed(title=f"**It is now Night {str(game.dayNum)} <:moon:934556372421451776>**", colour=disnake.Colour(0x1f0050))
 
     embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/934556372421451776.webp?size=96&quality=lossless")
@@ -56,41 +60,44 @@ async def nightCycle(game:classes.game.Game):
 
 # Assume we only have 1 ability for now
 async def sendTargetingEmbeds(game:classes.game.Game):
-    import classes.player
-    for i in game.playervar:
-        i.nightTargettedPlayers = []
-        if (i.dead == False):
-            asyncio.create_task(sendTargetingEmbed(i, game))
-        i.defended = None
-        i.isRoleBlocked = False
+    try:
+        import classes.player
+        for i in game.playervar:
+            i.nightTargettedPlayers = []
+            if (i.dead == False):
+                asyncio.create_task(sendTargetingEmbed(i, game))
+            i.defended = None
+            i.isRoleBlocked = False
 
-    await asyncio.sleep(33)
+        await asyncio.sleep(33)
 
-    # Process night actions
-    hierarchy = sorted(game.playervar, key=lambda x: x.assignedRole.order, reverse=True)
+        # Process night actions
+        hierarchy = sorted(game.playervar, key=lambda x: x.assignedRole.order, reverse=True)
 
-    for i in hierarchy:
-        i:classes.player.Player
+        for i in hierarchy:
+            i:classes.player.Player
 
-        if (len(i.nightTargettedPlayers) == 0):
-            continue
+            if (len(i.nightTargettedPlayers) == 0):
+                continue
 
-        if (i.isRoleBlocked):
-            embed = disnake.Embed(title="**You were Distracted!**", colour=disnake.Colour(0xffb6f0), description="**You ended up not performing your ability tonight.**")
+            if (i.isRoleBlocked):
+                embed = disnake.Embed(title="**You were Distracted!**", colour=disnake.Colour(0xffb6f0), description="**You ended up not performing your ability tonight.**")
 
-            embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009181021859749970/1009885085002104933/IMG_0038-removebg-preview.png")
-            embed.set_footer(text="Use `/status` to learn what Distraction does", icon_url=i.memberObj.display_avatar.url)
-            await i.memberObj.send(embed=embed)
-            continue
-
-
-        await i.assignedRole.abilities[0].invokeMethod(i.nightTargettedPlayers, i, game)
+                embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009181021859749970/1009885085002104933/IMG_0038-removebg-preview.png")
+                embed.set_footer(text="Use `/status` to learn what Distraction does", icon_url=i.memberObj.display_avatar.url)
+                await i.memberObj.send(embed=embed)
+                continue
 
 
-    await asyncio.sleep(5)
+            await i.assignedRole.abilities[0].invokeMethod(i.nightTargettedPlayers, i, game)
 
-    await cogs.gameplay.day.dayCycle(game)
 
+        await asyncio.sleep(5)
+
+        await cogs.gameplay.day.dayCycle(game)
+    except Exception as e:
+        await classes.errorhandler.handle(game.channelTownSquare, e)
+        await utils.finishGame(game)
 
 
 async def sendTargetingEmbed(i:classes.player.Player, game):
@@ -131,14 +138,15 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
             super().__init__(placeholder="Select a player to target...", min_values=1, max_values=1, options=options)
 
         async def callback(self, interaction: MessageInteraction):
+            selfPlayer:classes.player.Player = classes.player.Player.get(interaction.author.id, game)
 
             if (self.values[0] == "abstain"):
 
                 embed = disnake.Embed(title=f"**You decide to do nothing tonight**", colour=disnake.Colour(0xbbf6ff))
                 embed.set_footer(text="You can change your action", icon_url=interaction.author.display_avatar.url)
                 await interaction.response.send_message(embed=embed)
+                selfPlayer.nightTargettedPlayers.clear()
             else:
-                selfPlayer:classes.player.Player = classes.player.Player.get(interaction.author.id, game)
                 targettedPlayer:classes.player.Player = classes.player.Player.get(int(self.values[0]), game)
 
                 selfPlayer.nightTargettedPlayers.clear()

@@ -39,11 +39,19 @@ class Player():
         return None
     
     # Kill player, True if successful and False otherwise.
-    async def kill(self, deathReason:classes.enums.DeathReason, force=False):
-        if (self.defended == None and force == False):
+    async def kill(self, deathReason:classes.enums.DeathReason, game:Game, force=False):
+        if (self.defended == None or force == True):
+
+            # Silence them for good by changing their role to dead
+            self.memberObj.remove_roles(game.rolePlayer)
+            self.memberObj.add_roles(game.roleDead)
+
             self.dead = True
             self.deathReason = deathReason
             await self.memberObj.send(embed=deathEmbeds[deathReason].set_footer(text="Rest in peace.", icon_url=self.memberObj.display_avatar.url))
+
+            self.memberObj.remove_role()
+
             return True
         else:
             embed = disnake.Embed(title="**Your target was attacked last night!**", colour=disnake.Colour(0x7ed321))

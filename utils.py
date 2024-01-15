@@ -27,18 +27,25 @@ async def makePrivate(channel:disnake.channel.TextChannel):
     await channel.set_permissions(channel.guild.default_role, view_channel=False, read_messages=False)
 
 async def modifySendPermissions(channel:disnake.channel.TextChannel, game:classes.game.Game, **kwargs):
-
     """
+    |coro|
+
     Modifies the permissions of a channel.
+
+    In this case, it will change send permissions using the Anarchic game and other parameters
+
     Parameters:
-        channel: The channel to modify permissions for
-
-    dead --> dead players
-
-    alive --> alive playrers
-
+    ----------
+        channel: :class:`disnake.channel.TextChannel`
+            The channel to modify permissions for
+        game: :class:`classes.game.Game`
+            Game to take roles from
+        :class:`**kwargs`:
+            dead: :class:`bool`
+                If messages will be sendable by dead players.
+            alive: :class:`bool`
+                If messages will be sendable by alive players.
     """
-
 
     #get roles to modify permissions for
     playerRole = game.rolePlayer
@@ -51,20 +58,26 @@ async def modifySendPermissions(channel:disnake.channel.TextChannel, game:classe
     overwrite.send_messages = kwargs["alive"]
     await channel.set_permissions(playerRole, overwrite=overwrite)
 
-async def modifyReadPermissoins(channel:disnake.channel.TextChannel, game:classes.game.Game, **kwargs):
-
+async def modifyReadPermissions(channel:disnake.channel.TextChannel, game:classes.game.Game, **kwargs):
     """
+    |coro|
+
     Modifies the permissions of a channel.
+
+    In this case, it will change read permissions using the Anarchic game and other parameters
+
     Parameters:
-        channel: The channel to modify permissions for
-
-    dead --> dead playres
-
-    alive --> alive players
-
+    ----------
+        channel: :class:`disnake.channel.TextChannel`
+            The channel to modify permissions for
+        game: :class:`classes.game.Game`
+            Game to take roles from
+        :class:`**kwargs`:
+            dead: :class:`bool`
+                If the channel will be readable by dead players.
+            alive: :class:`bool`
+                If the channel will be readable by alive players.
     """
-
-    
 
     #get roles to modify permissions for
     playerRole = game.rolePlayer
@@ -72,6 +85,8 @@ async def modifyReadPermissoins(channel:disnake.channel.TextChannel, game:classe
 
     overwrite = channel.overwrites_for(deadRole)
     overwrite.read_messages = kwargs["dead"]
+
+    
     await channel.set_permissions(deadRole, overwrite=overwrite)
     overwrite = channel.overwrites_for(playerRole)
     overwrite.read_messages = kwargs["alive"]
@@ -111,12 +126,6 @@ def notDead(me, allPlayers):
 def reasonToText(reason:classes.enums.DeathReason, mention):
     if (reason == classes.enums.DeathReason.Unknown):
         return f"{mention} **disappeared**."
-    # if (reason == DeathReason.GoingInsane):
-    #     return "They gave up on Anarchic and left the Town."
-    # if (reason == DeathReason.Unknown):
-    #     return "They were killed of unknown causes."
-    # if (reason == DeathReason.Suicide):
-    #     return "They commited suicide."
     if (reason == classes.enums.DeathReason.Mafia):
         return f"{mention} was **attacked by the Mafia** <:mafia:1007768566789050378>"
     if (reason == classes.enums.DeathReason.Enforcer):
@@ -135,6 +144,7 @@ def reasonToText(reason:classes.enums.DeathReason, mention):
     #     return "They were killed by a member of the **Psychopath**."
     # if (reason == DeathReason.Cleaned):
     #     return "We could not determine how they died."
+    return f"{mention} died"
 
 async def getCurrentLynch(votingData, game):
     """Utilises the class's voting data to generate a current lynch as a string. Will most likely throw an error when a invalid voting data is part of the class"""
@@ -169,7 +179,7 @@ def createVotingResults(embed, game:classes.game.Game, guilties, innocents):
 
     abstained = list(set(game.playervar) - set(guilties) - set(innocents))
 
-    embed.add_field(name="**`Abstain ☑️`**", value="\n".join([i.memberObj.mention for i in abstained if i.dead == False]))
+    embed.add_field(name="**`Abstain ☑️`**", value="\n".join([i.memberObj.mention for i in abstained if i.dead == False and i != game.accusedPlayer]))
 
     embed.set_footer(text="Most trial results are democratic")
 
@@ -196,7 +206,7 @@ def errorToText(errorStr:str):
 def errorToFix(errorStr:str):
     errorStr = errorStr.lower()
     if ("403" in errorStr):
-        return "- Check the permissions the bot has\n- Make sure the bot has not been blocked by any user"
+        return "- Check the permissions the bot has\n- Make sure the bot has not been blocked by any user\n- Make sure direct messages have been enabled in your server privacy settings"
     else:
         return "- Wait until a fix has been applied"
     
@@ -204,7 +214,10 @@ async def finishGame(game:classes.game.Game):
     game.finished = True
 
     await modifySendPermissions(game.channelTownSquare, game, dead=True, alive=True)
-    await modifyReadPermissoins(game.channelGraveyard, game, dead=True, alive=True)
+    await modifyReadPermissions(game.channelGraveyard, game, dead=True, alive=True)
     await modifySendPermissions(game.channelGraveyard, game, dead=True, alive=True)
-    await modifyReadPermissoins(game.channelMafia, game, dead=True,alive=True)
+    await modifyReadPermissions(game.channelMafia, game, dead=True,alive=True)
     await modifySendPermissions(game.channelMafia, game, dead=True,alive=True)
+
+    for i in game.players:
+        await game.channelMafia.set_permissions(target=i, overwrite=disnake.PermissionOverwrite(read_messages=True,send_messages=True), reason="Game finished")

@@ -9,7 +9,7 @@ import classes.enums
 
 async def kill(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayer:classes.player.Player = targetPlayers[0]
-    targetPlayer.kill(classes.enums.DeathReason.Enforcer)
+    targetPlayer.kill(classes.enums.DeathReason.Enforcer, game)
     if (targetPlayer.assignedRole.faction == classes.enums.Faction.Town):
         embed = disnake.Embed(title="**You could not get over the guilt of killing a Town <:town:1007768656341651547>**", colour=disnake.Colour(0x7ed321), description="You have lost all charges of __Eliminate__ <:vgicon:890339050865696798>")
 

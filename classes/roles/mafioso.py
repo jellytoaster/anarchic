@@ -9,7 +9,7 @@ import classes.enums
 
 async def kill(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayer:classes.player.Player = targetPlayers[0]
-    attack = await targetPlayer.kill(classes.enums.DeathReason.Mafia)
+    attack = await targetPlayer.kill(classes.enums.DeathReason.Mafia, game)
     if (attack == False):
         embed = disnake.Embed(title="**Your attack failed**", colour=disnake.Colour(0x363636))
 

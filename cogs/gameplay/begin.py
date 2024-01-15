@@ -70,9 +70,13 @@ async def genChannels(game:classes.game.Game):
         i:disnake.Member
         await i.add_roles(game.rolePlayer)
 
+    # Modify send permissions for channels
     await utils.modifySendPermissions(townsquare, game, dead=False,alive=False)
-    await utils.modifyReadPermissoins(townsquare, game, dead=True,alive=True)
-    await utils.modifyReadPermissoins(graveyard, game, dead=True,alive=False)
+    await utils.modifySendPermissions(mafiacontacts, game, dead=False,alive=True)
+
+    # Modify read permissions for channels
+    await utils.modifyReadPermissions(townsquare, game, dead=True,alive=True)
+    await utils.modifyReadPermissions(graveyard, game, dead=True,alive=False)
 
     await utils.makePrivate(townsquare)
     await utils.makePrivate(graveyard)
@@ -121,6 +125,8 @@ async def prep(game:classes.game.Game):
         await utils.finishGame(game)
 
 async def start(game:classes.game.Game):
+    if (game.finished == True):
+        return
     game.dayNum += 1
 
     mafiaMembers = []
