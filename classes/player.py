@@ -43,8 +43,8 @@ class Player():
         if (self.defended == None or force == True):
 
             # Silence them for good by changing their role to dead
-            self.memberObj.remove_roles(game.rolePlayer)
-            self.memberObj.add_roles(game.roleDead)
+            await self.memberObj.remove_roles(game.rolePlayer)
+            await self.memberObj.add_roles(game.roleDead)
 
             self.dead = True
             self.deathReason = deathReason

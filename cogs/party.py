@@ -27,14 +27,8 @@ class PartyCog(commands.Cog):
         onlinePlayers = 0
 
         for i in game.players:
-<<<<<<< HEAD
             i:disnake.Member
             if (i.raw_status != "offline" or i.is_on_mobile()):
-=======
-            print(i.status)
-            i:disnake.Member
-            if (i.raw_status != "offline"):
->>>>>>> dac42905fc9c1bebbea542d277258573e3615e0e
                 onlinePlayers += 1
 
         embed.set_footer(text=f"{onlinePlayers}/{len(game.players)} players online", icon_url=inter.author.avatar.url)
@@ -65,6 +59,7 @@ class PartyCog(commands.Cog):
             return
         if (game.hasStarted):
             await inter.response.send_message("You're not allowed to leave when a game is in progress!", ephemeral=True)
+            return
         
         game.players.remove(inter.author)
 
@@ -164,7 +159,6 @@ class PartyCog(commands.Cog):
                 def __init__(self) -> None:
                     super().__init__()
 
-<<<<<<< HEAD
             await asyncio.sleep(2)
 
             await inter.edit_original_message(embed=embed, view=HelpView())
@@ -174,11 +168,3 @@ class PartyCog(commands.Cog):
         except Exception as e:
             await classes.errorhandler.handle(game.channelTownSquare, e)
             await utils.finishGame(game)
-=======
-        await asyncio.sleep(2)
-
-        await inter.edit_original_message(embed=embed, view=HelpView())
-
-        await asyncio.sleep(2)
-        await cogs.gameplay.begin.start(game)
->>>>>>> dac42905fc9c1bebbea542d277258573e3615e0e

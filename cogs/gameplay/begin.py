@@ -125,8 +125,6 @@ async def prep(game:classes.game.Game):
         await utils.finishGame(game)
 
 async def start(game:classes.game.Game):
-    if (game.finished == True):
-        return
     game.dayNum += 1
 
     mafiaMembers = []
@@ -156,6 +154,9 @@ async def start(game:classes.game.Game):
     
     embed.set_image(url="https://images-ext-2.discordapp.net/external/8cFuWNzv5vDa4TbO68gg5Up4DSxguodCGurCAtDpWgU/%3Fwidth%3D936%26height%3D701/https/media.discordapp.net/attachments/765738640554065962/878068703672016968/unknown.png")
     embed.set_footer(text="Talk, Bait, Claim.")
+
+    if (game.finished == True):
+        return
 
     #player and setup fields
 
