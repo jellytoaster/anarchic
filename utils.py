@@ -113,6 +113,14 @@ def notMafiaAndNotDead(me, allPlayers):
 def literallyAnyone(me, allPlayers):
     return allPlayers
 
+def playersWhoVotedGuilty(me, allPlayers):
+    res = []
+    for i in allPlayers:
+        if (i not in me.game.votedGuilty and i not in me.game.votedInnocent):
+            res.append(i)
+
+    return res
+
 
 def notDead(me, allPlayers):
     res = []
@@ -132,8 +140,8 @@ def reasonToText(reason:classes.enums.DeathReason, mention):
         return f"{mention} was **shot by a Vigilante** <:vgicon:890339050865696798>"
     # # if (reason == DeathReason.Guilt):
     # #     return "They died from **Guilt**."
-    # if (reason == DeathReason.Jester):
-    #     return "**killed over lynching the Jester** <:jesticon2:889968373612560394>."
+    if (reason == classes.enums.DeathReason.Jester):
+        return "**killed over lynching the Jester** <:jesticon2:889968373612560394>."
     if (reason == classes.enums.DeathReason.Plague):
         return f"{mention} was **taken by the Plague**."
     # if (reason == DeathReason.Bodyguard):
@@ -193,8 +201,11 @@ def chargeCount(charges):
     else:
         return f"You will have {charges - 1} charges left"
     
-def true(game):
+def true(i, game):
     return True
+
+def jesterDeathCheck(i:classes.player.Player, game:classes.game.Game):
+    return game.currentRound == i.deathRound and i.deathReason == classes.enums.DeathReason.Lynch
 
 def errorToText(errorStr:str):
     errorStr = errorStr.lower()

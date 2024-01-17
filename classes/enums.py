@@ -31,3 +31,4 @@ class DeathReason(Enum):
     Enforcer = 2
     Lynch = 3
     Plague = 4
+    Jester = 5

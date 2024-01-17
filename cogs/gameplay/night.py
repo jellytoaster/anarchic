@@ -71,7 +71,7 @@ async def sendTargetingEmbeds(game:classes.game.Game):
 
         await asyncio.sleep(33)
 
-        # Process night actions
+        # Process night actions, 1 goes first and so on
         hierarchy = sorted(game.playervar, key=lambda x: x.assignedRole.order, reverse=True)
 
         for i in hierarchy:
@@ -112,7 +112,7 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
         await i.memberObj.send(embed=embed)
         return
 
-    if (i.assignedRole.abilities[playerSelectedAbility].charges == 0 or i.assignedRole.abilities[playerSelectedAbility].usableFunction(game) == False):
+    if (i.assignedRole.abilities[playerSelectedAbility].charges == 0 or i.assignedRole.abilities[playerSelectedAbility].usableFunction(i, game) == False):
         embed = disnake.Embed(title=f"**You have no more abilities for the night**", colour=disnake.Colour(0xbbf6ff))
 
         embed.set_thumbnail(url=i.memberObj.display_avatar.url)

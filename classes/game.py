@@ -28,6 +28,9 @@ class Game():
         self.finished = False
         self.daysWithoutDeath = 0
         self.accusedPlayer = None
+        self.votedInnocent = []
+        self.votedGuilty = []
+        self.currentRound = 0
 
     def reset(self):
         self.playervar:list(player.Player) = []
@@ -41,6 +44,9 @@ class Game():
         self.finished = False
         self.daysWithoutDeath = 0
         self.accusedPlayer = None
+        self.votedInnocent = []
+        self.votedGuilty = []
+        self.currentRound = 0
 
 
     def findGuildGame(id:int):

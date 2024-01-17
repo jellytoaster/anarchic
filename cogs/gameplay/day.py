@@ -12,6 +12,7 @@ async def dayCycle(game:classes.game.Game):
         global isAccusation
         isAccusation = False
         game.dayNum += 1
+        game.currentRound += 1
 
         deadPlayers = []
         for i in game.playervar:
@@ -237,8 +238,8 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
         embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1010903922916991006.webp?size=44&quality=lossless")
         embed.set_footer(text="You have 20 seconds to vote", icon_url=targetPlayer.memberObj.display_avatar.url)
 
-        innocents = []
-        guilties = []
+        game.votedInnocent = []
+        game.votedGulity = []
 
         class Fatedecider(disnake.ui.View):
             def __init__(self):
@@ -256,11 +257,11 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
                 if (selfPlayer.id == targetPlayer.id):
                     await inter.response.send_message("You can't vote on your own trial!", ephemeral=True)
                     return
-                if (inter.author.id in innocents):
-                    innocents.remove(selfPlayer)
+                if (inter.author.id in game.votedInnocent):
+                    game.votedInnocent.remove(selfPlayer)
 
-                if (inter.author.id not in guilties):
-                    guilties.append(selfPlayer)
+                if (inter.author.id not in game.votedGuilty):
+                    game.votedGuilty.append(selfPlayer)
 
                 await inter.response.send_message(content=f"You have __**Guiltied**__ <:vote:1009960345428820059> {targetPlayer.memberObj.name} ", ephemeral=True)
                 await game.channelTownSquare.send(f"**__{selfPlayer.memberObj.name}__ <:vote:1009960345428820059>** has voted")
@@ -277,11 +278,11 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
                 if (selfPlayer.id == targetPlayer.id):
                     await inter.response.send_message("You can't vote on your own trial!", ephemeral=True)
                     return
-                if (inter.author.id in guilties):
-                    guilties.remove(selfPlayer)
+                if (inter.author.id in game.votedGuilty):
+                    game.votedGuilty.remove(selfPlayer)
                     
-                if (inter.author.id not in innocents):
-                    innocents.append(selfPlayer)
+                if (inter.author.id not in game.votedInnocent):
+                    game.votedInnocent.append(selfPlayer)
 
                 await inter.response.send_message(content=f"You have marked {targetPlayer.memberObj.name} as __**Innocent**__ <:xvote:1009959214837415966>", ephemeral=True)
                 await game.channelTownSquare.send(f"**__{selfPlayer.memberObj.name}__ <:vote:1009960345428820059>** has voted")
@@ -311,19 +312,19 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
 
         # Calculate Results
         winner = -1 # -1 for no data yet
-        if (len(guilties) > len(innocents)):
+        if (len(game.votedGuilty) > len(game.votedInnocent)):
             winner = 1 # 1 for lynch
-        elif (len(guilties) <= len(innocents)):
+        elif (len(game.votedGuilty) <= len(game.votedInnocent)):
             winner = 2 # 2 for innocent
         else:
             winner = 2 # 0 for ties
 
         if (winner == 1):
-            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xff6363), description=f"The Town has decided to lynch **{targetPlayer.memberObj.name}#{targetPlayer.memberObj.discriminator}** on a vote of **__{len(guilties)}__** - **__{len(innocents)}__**")
+            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xff6363), description=f"The Town has decided to lynch **{targetPlayer.memberObj.name}#{targetPlayer.memberObj.discriminator}** on a vote of **__{len(game.votedGuilty)}__** - **__{len(game.votedInnocent)}__**")
         if (winner == 2):
-            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xa3ffc2), description=f"The Town has decided to pardon **{targetPlayer.memberObj.name}#{targetPlayer.memberObj.discriminator}** on a vote of **__{len(guilties)}__** - **__{len(innocents)}__**")
+            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xa3ffc2), description=f"The Town has decided to pardon **{targetPlayer.memberObj.name}#{targetPlayer.memberObj.discriminator}** on a vote of **__{len(game.votedGuilty)}__** - **__{len(game.votedInnocent)}__**")
 
-        embed = utils.createVotingResults(embed, game, guilties, innocents)
+        embed = utils.createVotingResults(embed, game, game.votedGuilty, game.votedInnocent)
         
         await game.channelTownSquare.send(embed=embed)
 

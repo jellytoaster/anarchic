@@ -33,6 +33,8 @@ class Role:
         import classes.roles.doctor
         import classes.roles.vigilante
         import classes.roles.consort
+        import classes.roles.jester
+
         classes.roles.cop.Cop("Cop", Faction.Town)
         classes.roles.mafioso.Mafioso("Mafioso", Faction.Mafia)
         classes.roles.villager.Villager("Villager", Faction.Town)
@@ -40,3 +42,4 @@ class Role:
         classes.roles.vigilante.Vigilante("Vigilante", Faction.Town)
         classes.roles.doctor.Doctor("Doctor", Faction.Town)
         classes.roles.consort.Consort("Consort", Faction.Mafia)
+        classes.roles.jester.Jester("Jester", Faction.Neutral)
