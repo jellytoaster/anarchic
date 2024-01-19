@@ -165,5 +165,12 @@ async def start(game:classes.game.Game):
     await game.channelTownSquare.send(embed=embed)
     await utils.modifySendPermissions(game.channelTownSquare, game, alive=True, dead=False)
 
+    # Activate day one abilities
+    for i in game.playervar:
+        for x in i.abilities:
+            if x.type == classes.enums.AbilityType.DayOne and x.usableFunction(i, game) and utils.chargeUsable(x.charges):
+                x.invokeMethod(x.targetingOptions(i, game.playervar), i, game)
+                x.charges -= 1
+
     await asyncio.sleep(15)
     await asyncio.create_task(cogs.gameplay.night.nightCycle(game))
