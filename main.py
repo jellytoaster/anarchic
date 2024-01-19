@@ -14,8 +14,9 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print("With an ID of " + str(bot.user.id))
+    print("Login time: ", time.time())
     print('------')
-    print("Login time in epoch: ", time.time())
+    
     game = disnake.Activity(type=disnake.ActivityType.watching, name="chaos | /help")
     await bot.change_presence(activity=game, status=disnake.Status.do_not_disturb)
 
