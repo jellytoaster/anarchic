@@ -68,6 +68,7 @@ async def sendTargetingEmbeds(game:classes.game.Game):
                 asyncio.create_task(sendTargetingEmbed(i, game))
             i.defended = None
             i.isRoleBlocked = False
+            i.isVoteBlocked = False
 
         await asyncio.sleep(33)
 

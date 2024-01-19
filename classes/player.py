@@ -21,6 +21,7 @@ class Player():
         self.deathReason = classes.enums.DeathReason.Unknown
         self.defended = None
         self.isRoleBlocked = False
+        self.isVoteBlocked = False
         self.isSuspicious = False
         self.nightTargettedPlayers = []
         self.wins = False

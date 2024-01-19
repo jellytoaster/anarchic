@@ -136,6 +136,9 @@ async def votingCycle(game:classes.game.Game):
                 if (selfPlayer.dead == True):
                     await interaction.response.send_message("You cannot vote while dead <:xvote:1009959214837415966>", ephemeral=True)
                     return
+                if (selfPlayer.isVoteBlocked == True):
+                    await interaction.response.send_message("You have been voteblocked! You are unable to vote for today.", ephemeral=True)
+                    return
             
                 if (self.values[0] == "Cancel"):
 
@@ -146,10 +149,6 @@ async def votingCycle(game:classes.game.Game):
                             votingData[k].remove(selfPlayer.id)
                         
                     await updateStatusMsg(game, votingData, condition)
-                    return
-
-                if (interaction.author not in game.players):
-                    await interaction.response.send_message("sorry mister but no rigging votes", ephemeral=True)
                     return
                 
                 votingData[int(self.values[0])].append(selfPlayer.id)
