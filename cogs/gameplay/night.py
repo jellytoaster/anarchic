@@ -78,6 +78,11 @@ async def sendTargetingEmbeds(game:classes.game.Game):
         for i in hierarchy:
             i:classes.player.Player
 
+            for x in i.assignedRole.abilities:
+                if (x.type == classes.enums.AbilityType.Passive):
+                    if (x.usableFunction(i, game)):
+                        await x.invokeMethod([], i, game)
+
             if (len(i.nightTargettedPlayers) == 0):
                 continue
 
@@ -102,22 +107,16 @@ async def sendTargetingEmbeds(game:classes.game.Game):
 
 
 async def sendTargetingEmbed(i:classes.player.Player, game):
+    abilities = [x for x in i.assignedRole.abilities if x.type == classes.enums.AbilityType.Night]
+
     playerSelectedAbility = 0
     data = None
 
-    if (i.assignedRole.abilities == []):
+    if (abilities == [] or abilities[playerSelectedAbility].charges == 0 or abilities[playerSelectedAbility].usableFunction(i, game) == False):
         embed = disnake.Embed(title=f"**You have no abilities for the night**", colour=disnake.Colour(0xbbf6ff))
 
         embed.set_thumbnail(url=i.memberObj.display_avatar.url)
-        embed.set_footer(text="rip", icon_url=i.memberObj.display_avatar.url)
-        await i.memberObj.send(embed=embed)
-        return
-
-    if (i.assignedRole.abilities[playerSelectedAbility].charges == 0 or i.assignedRole.abilities[playerSelectedAbility].usableFunction(i, game) == False):
-        embed = disnake.Embed(title=f"**You have no more abilities for the night**", colour=disnake.Colour(0xbbf6ff))
-
-        embed.set_thumbnail(url=i.memberObj.display_avatar.url)
-        embed.set_footer(text="rip", icon_url=i.memberObj.display_avatar.url)
+        embed.set_footer(text="Maybe tomorrow?", icon_url=i.memberObj.display_avatar.url)
         await i.memberObj.send(embed=embed)
         return
     

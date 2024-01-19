@@ -6,6 +6,7 @@ import cogs.gameplay.night
 import asyncio
 import cogs.gameplay.winConditions
 import classes.game
+import classes.roles.jester
 
 async def dayCycle(game:classes.game.Game):
     try:
@@ -338,6 +339,11 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
             embed.set_footer(text="Rest in Peace")
             await game.channelTownSquare.send(embed=embed)
             await asyncio.sleep(3)
+            if (targetPlayer.assignedRole is classes.roles.jester.Jester):
+                embed = disnake.Embed(title="**The Jester has been lynched**", colour=disnake.Colour(0xffc3e7), description=f"All players who voted **Guilty** will be occupied the following **Night <:moon:934556372421451776>**. In addition, a player who voted **Guilty** will be haunted by the **Jester {targetPlayer.assignedRole.emoji}**")
+
+                embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/889968373612560394.webp?size=96&quality=lossless")
+                embed.set_footer(text="The Jester always get their revenge")
 
         else:
             await asyncio.sleep(5)

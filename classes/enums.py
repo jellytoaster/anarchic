@@ -32,3 +32,11 @@ class DeathReason(Enum):
     Lynch = 3
     Plague = 4
     Jester = 5
+
+class AbilityType(Enum):
+    Passive = 0
+    Night = 1
+    Dawn = 2
+    Dusk = 3
+    PassiveDawn = 4
+    PassiveDusk = 5
