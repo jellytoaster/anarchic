@@ -1,20 +1,13 @@
 import disnake
 import time
-<<<<<<< HEAD
 import os
-=======
->>>>>>> dac42905fc9c1bebbea542d277258573e3615e0e
 import config
 import cogs
 from classes.role import Role
 from cogs import party, setupManagement, admin, endGame, basic, help
 from disnake.ext import commands
 
-<<<<<<< HEAD
 bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
-=======
-bot = commands.AutoShardedBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
->>>>>>> dac42905fc9c1bebbea542d277258573e3615e0e
 
 @bot.event
 async def on_ready():
