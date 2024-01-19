@@ -12,7 +12,6 @@ class Role:
         self.type = ""
         self.suspiciousRole = False
         self.promotionOrder = 0
-        self.targetingOptions = utils.literallyAnyone
         self.abilities:list = []
         self.roleEmbed = None
         self.order = 0 # 0 is first, higher numbers have their role action processed later

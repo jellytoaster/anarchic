@@ -124,7 +124,7 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
     emb = disnake.Embed(title=f"**{i.assignedRole.name} {i.assignedRole.emoji} | <:moon:934556372421451776> {i.assignedRole.abilities[playerSelectedAbility].name}**", colour=disnake.Colour(i.assignedRole.color), description=f"**{i.assignedRole.emoji} {i.assignedRole.abilities[playerSelectedAbility].name} -** {i.assignedRole.abilities[playerSelectedAbility].description}").set_footer(text="You have 30 seconds to make a descision", icon_url=i.memberObj.display_avatar.url).add_field(name="**Use the Dropdown below to react with a target!**", value="** **", inline=False)
     
     # Generate targetting list
-    allowedPlayers = i.assignedRole.targetingOptions(i, game.playervar)
+    allowedPlayers = abilities[playerSelectedAbility].targetingOptions(i, game.playervar)
     
     class TargetingDropdown(disnake.ui.StringSelect):
         def __init__(self):

@@ -10,7 +10,6 @@ class Associate(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
         self.suspiciousRole = True
-        self.targetingOptions = utils.literallyAnyone
         self.color = 0xd0021b
         self.promotionOrder = 10
         self.order = 0

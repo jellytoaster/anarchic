@@ -11,7 +11,6 @@ class Villager(role.Role):
 
         super().__init__(name, faction)
         self.suspiciousRole = False
-        self.targetingOptions = utils.literallyAnyone
         self.color = 0x7ed321
         self.type = "vanilla"
         self.order = 0
