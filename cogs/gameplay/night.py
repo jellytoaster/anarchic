@@ -80,8 +80,9 @@ async def sendTargetingEmbeds(game:classes.game.Game):
 
             for x in i.assignedRole.abilities:
                 if (x.type == classes.enums.AbilityType.Passive):
-                    if (x.usableFunction(i, game)):
-                        await x.invokeMethod([], i, game)
+                    if (x.usableFunction(i, game) and utils.chargeUsable(x.charges)):
+                        x.charges -= 1
+                        await x.invokeMethod(x.targetingOptions(i, game.playervar), i, game)
 
             if (len(i.nightTargettedPlayers) == 0):
                 continue
@@ -112,7 +113,7 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
     playerSelectedAbility = 0
     data = None
 
-    if (abilities == [] or abilities[playerSelectedAbility].charges == 0 or abilities[playerSelectedAbility].usableFunction(i, game) == False):
+    if (abilities == [] or not utils.chargeUsable(abilities[playerSelectedAbility].charges) or abilities[playerSelectedAbility].usableFunction(i, game) == False):
         embed = disnake.Embed(title=f"**You have no abilities for the night**", colour=disnake.Colour(0xbbf6ff))
 
         embed.set_thumbnail(url=i.memberObj.display_avatar.url)

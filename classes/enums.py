@@ -40,3 +40,4 @@ class AbilityType(Enum):
     Dusk = 3
     PassiveDawn = 4
     PassiveDusk = 5
+    DayOne = 6

@@ -92,6 +92,11 @@ async def modifyReadPermissions(channel:disnake.channel.TextChannel, game:classe
     overwrite.read_messages = kwargs["alive"]
     await channel.set_permissions(playerRole, overwrite=overwrite)
 
+def chargeUsable(chargeAmt:int):
+    if (chargeAmt < 0 or chargeAmt == -1):
+        return True
+    return False
+
 # Targeting options templates
 def notMeAndNotDead(me, allPlayers):
     res = []
@@ -116,7 +121,7 @@ def literallyAnyone(me, allPlayers):
 def playersWhoVotedGuilty(me, allPlayers):
     res = []
     for i in allPlayers:
-        if (i not in me.game.votedGuilty and i not in me.game.votedInnocent):
+        if (i not in me.game.votedGuilty and i not in me.game.votedInnocent and i != me):
             res.append(i)
 
     return res
