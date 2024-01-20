@@ -15,38 +15,57 @@ import classes.enums
 import classes.role
 
 def assignRoles(game:classes.game.Game):
-    roles = copy.deepcopy(game.setupData.roles)
-    for i in game.players:
-        newPlayer = player.Player(i, game)
+    def fufillsRoleCiteria():
+        numPlayers = len(game.players)
+        numMafiasRequired = 0
+        numMafias = len(player.Player.getPlayersWithFactions(classes.enums.Faction.Mafia, game))
 
-        selection:str = random.choice(roles)
-
-        if (utils.isContraction(selection)):
-            if "random" in selection.lower():
-                # Just any role that follows the faction
-                # Pick a role that fits the faction
-                randomList = []
-                for i in classes.role.Role.allRoles:
-                    i:classes.role.Role
-                    if (selection.split()[1].lower() == i.faction.value):
-                        randomList.append(i.name)
-
-                finalSelection = random.choice(randomList)
-            else:
-                # Category, e.g Mafia Killing <-- killing role and is mafia
-                randomList = []
-                for i in classes.role.Role.allRoles:
-                    i:classes.role.Role
-                    if (selection.split()[0].lower() == i.faction.value.lower() and selection.split()[1].lower() == i.type.lower()):
-                        randomList.append(i.name)
-
-                finalSelection = random.choice(randomList)
+        #calculate mafia roles required
+        if 1 <= numPlayers <= 6:
+            numMafiasRequired = 1
+        elif 7 <= numPlayers <= 9:
+            numMafiasRequired = 2
         else:
-            finalSelection = selection
+            numMafiasRequired = 3
 
-        newPlayer.assignedRole = copy.deepcopy(role.Role.toRole(finalSelection))
-        newPlayer.game = game
-        roles.remove(selection)
+        return numMafias == numMafiasRequired
+
+    while True:
+        roles = copy.deepcopy(game.setupData.roles)
+        for i in game.players:
+            newPlayer = player.Player(i, game)
+
+            selection:str = random.choice(roles)
+
+            if (utils.isContraction(selection)):
+                if "random" in selection.lower():
+                    # Just any role that follows the faction
+                    # Pick a role that fits the faction
+                    randomList = []
+                    for i in classes.role.Role.allRoles:
+                        i:classes.role.Role
+                        if (selection.split()[1].lower() == i.faction.value):
+                            randomList.append(i.name)
+
+                    finalSelection = random.choice(randomList)
+                else:
+                    # Category, e.g Mafia Killing <-- killing role and is mafia
+                    randomList = []
+                    for i in classes.role.Role.allRoles:
+                        i:classes.role.Role
+                        if (selection.split()[0].lower() == i.faction.value.lower() and selection.split()[1].lower() == i.type.lower()):
+                            randomList.append(i.name)
+
+                    finalSelection = random.choice(randomList)
+            else:
+                finalSelection = selection
+
+            newPlayer.assignedRole = copy.deepcopy(role.Role.toRole(finalSelection))
+            newPlayer.game = game
+            roles.remove(selection)
+
+            if (fufillsRoleCiteria()):
+                break
        
 async def sendRoles(game:classes.game.Game):
     for i in game.players:
@@ -170,7 +189,7 @@ async def start(game:classes.game.Game):
     for i in game.playervar:
         for x in i.assignedRole.abilities:
             if x.type == classes.enums.AbilityType.DayOne and x.usableFunction(i, game) and utils.chargeUsable(x.charges):
-                x.invokeMethod(x.targetingOptions(i, game.playervar), i, game)
+                await x.invokeMethod(x.targetingOptions(i, game.playervar, game), i, game)
                 x.charges -= 1
 
     await asyncio.sleep(15)

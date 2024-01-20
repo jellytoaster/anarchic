@@ -1,7 +1,10 @@
 import asyncio
+import config
 import utils
 import classes.errorhandler
+import classes.role
 import cogs.gameplay.begin
+import classes.enums
     
 from classes.game import Game
 
@@ -42,6 +45,9 @@ class PartyCog(commands.Cog):
             return
         if (game.hasStarted):
             await inter.response.send_message("You're not allowed to join when a game is in progress!", ephemeral=True)
+            return
+        if (len(game.players) == config.PLAYER_LIMIT):
+            await inter.response.send_message(f"The party has already reached the limit of **{config.PLAYER_LIMIT}**! Wait until someone leaves the game.", ephemeral=True)
             return
         
         game.players.append(inter.author)
@@ -127,6 +133,25 @@ class PartyCog(commands.Cog):
                 return
             if (len(game.setupData.roles) != len(game.players)):
                 await inter.response.send_message("The amount of players don't match with the setup count! You'll need **{}** players to start the game.".format(len(game.setupData.roles)), ephemeral=True)
+                return
+            
+            def fufillsRoleCiteria():
+                numPlayers = len(game.players)
+                numMafiasRequired = 0
+                numMafias = len([i for i in game.setupData.roles if classes.role.Role.toRole(i).faction == classes.enums.Faction.Mafia])
+
+                #calculate mafia roles required
+                if 1 <= numPlayers <= 6:
+                    numMafiasRequired = 1
+                elif 7 <= numPlayers <= 9:
+                    numMafiasRequired = 2
+                else:
+                    numMafiasRequired = 3
+
+                return numMafias == numMafiasRequired
+            
+            if (not fufillsRoleCiteria()):
+                await inter.response.send_message("Your setup is **unbalanced**. Try removing/adding mafia roles.", ephemeral=True)
                 return
             
             # add player cont checking later
