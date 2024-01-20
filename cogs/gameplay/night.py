@@ -62,13 +62,25 @@ async def nightCycle(game:classes.game.Game):
 async def sendTargetingEmbeds(game:classes.game.Game):
     try:
         import classes.player
+
         for i in game.playervar:
-            i.nightTargettedPlayers = []
-            if (i.dead == False):
-                asyncio.create_task(sendTargetingEmbed(i, game))
             i.defended = None
             i.isRoleBlocked = False
             i.isVoteBlocked = False
+
+
+        # Perform early passives first
+        for i in game.playervar:
+            for x in i.assignedRole.abilities:
+                if (x.type == classes.enums.AbilityType.PassiveEarly):
+                    if (x.usableFunction(i, game) and utils.chargeUsable(x.charges)):
+                        x.charges -= 1
+                        await x.invokeMethod(x.targetingOptions(i, game.playervar, game), i, game)
+
+
+        for i in game.playervar:
+            i.nightTargettedPlayers = []
+            asyncio.create_task(sendTargetingEmbed(i, game))
 
         await asyncio.sleep(33)
 
@@ -82,19 +94,10 @@ async def sendTargetingEmbeds(game:classes.game.Game):
                 if (x.type == classes.enums.AbilityType.Passive):
                     if (x.usableFunction(i, game) and utils.chargeUsable(x.charges)):
                         x.charges -= 1
-                        await x.invokeMethod(x.targetingOptions(i, game.playervar), i, game)
+                        await x.invokeMethod(x.targetingOptions(i, game.playervar, game), i, game)
 
             if (len(i.nightTargettedPlayers) == 0):
                 continue
-
-            if (i.isRoleBlocked):
-                embed = disnake.Embed(title="**You were Distracted!**", colour=disnake.Colour(0xffb6f0), description="**You ended up not performing your ability tonight.**")
-
-                embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009181021859749970/1009885085002104933/IMG_0038-removebg-preview.png")
-                embed.set_footer(text="Use `/status` to learn what Distraction does", icon_url=i.memberObj.display_avatar.url)
-                await i.memberObj.send(embed=embed)
-                continue
-
 
             await i.assignedRole.abilities[0].invokeMethod(i.nightTargettedPlayers, i, game)
 
@@ -109,23 +112,32 @@ async def sendTargetingEmbeds(game:classes.game.Game):
 
 async def sendTargetingEmbed(i:classes.player.Player, game):
     abilities = [x for x in i.assignedRole.abilities if x.type == classes.enums.AbilityType.Night]
-
-    playerSelectedAbility = 0
     data = None
 
+    playerSelectedAbility = 0
     if (abilities == [] or not utils.chargeUsable(abilities[playerSelectedAbility].charges) or abilities[playerSelectedAbility].usableFunction(i, game) == False):
-        embed = disnake.Embed(title=f"**You have no abilities for the night**", colour=disnake.Colour(0xbbf6ff))
+        if (not i.dead):
+            embed = disnake.Embed(title=f"**You have no abilities for the night**", colour=disnake.Colour(0xbbf6ff))
 
-        embed.set_thumbnail(url=i.memberObj.display_avatar.url)
-        embed.set_footer(text="Maybe tomorrow?", icon_url=i.memberObj.display_avatar.url)
+            embed.set_thumbnail(url=i.memberObj.display_avatar.url)
+            embed.set_footer(text="Maybe tomorrow?", icon_url=i.memberObj.display_avatar.url)
+            await i.memberObj.send(embed=embed)
+        return
+
+    if (i.isRoleBlocked):
+        embed = disnake.Embed(title="**You were occupied!**", colour=disnake.Colour(0xffb6f0), description="**You ended up not performing your ability tonight.**")
+
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009181021859749970/1009885085002104933/IMG_0038-removebg-preview.png")
+        embed.set_footer(text="Use `/status` to learn what distraction does", icon_url=i.memberObj.display_avatar.url)
         await i.memberObj.send(embed=embed)
         return
+
     
     #Generate embed
     emb = disnake.Embed(title=f"**{i.assignedRole.name} {i.assignedRole.emoji} | <:moon:934556372421451776> {i.assignedRole.abilities[playerSelectedAbility].name}**", colour=disnake.Colour(i.assignedRole.color), description=f"**{i.assignedRole.emoji} {i.assignedRole.abilities[playerSelectedAbility].name} -** {i.assignedRole.abilities[playerSelectedAbility].description}").set_footer(text="You have 30 seconds to make a descision", icon_url=i.memberObj.display_avatar.url).add_field(name="**Use the Dropdown below to react with a target!**", value="** **", inline=False)
     
     # Generate targetting list
-    allowedPlayers = abilities[playerSelectedAbility].targetingOptions(i, game.playervar)
+    allowedPlayers = abilities[playerSelectedAbility].targetingOptions(i, game.playervar, game)
     
     class TargetingDropdown(disnake.ui.StringSelect):
         def __init__(self):

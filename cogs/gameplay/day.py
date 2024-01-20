@@ -142,8 +142,6 @@ async def votingCycle(game:classes.game.Game):
                     return
             
                 if (self.values[0] == "Cancel"):
-
-
                     await interaction.response.send_message(f"**__{interaction.author.name}__** has unvoted")
                     for k, v in votingData.items():
                         if (interaction.author.id in v):
@@ -262,6 +260,9 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
 
                 if (inter.author.id not in game.votedGuilty):
                     game.votedGuilty.append(selfPlayer)
+                else:
+                    await inter.response.send_message("nah", ephemeral=True)
+                    return
 
                 await inter.response.send_message(content=f"You have __**Guiltied**__ <:vote:1009960345428820059> {targetPlayer.memberObj.name} ", ephemeral=True)
                 await game.channelTownSquare.send(f"**__{selfPlayer.memberObj.name}__ <:vote:1009960345428820059>** has voted")
@@ -283,6 +284,9 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
                     
                 if (inter.author.id not in game.votedInnocent):
                     game.votedInnocent.append(selfPlayer)
+                else:
+                    await inter.response.send_message("nah", ephemeral=True)
+                    return
 
                 await inter.response.send_message(content=f"You have marked {targetPlayer.memberObj.name} as __**Innocent**__ <:xvote:1009959214837415966>", ephemeral=True)
                 await game.channelTownSquare.send(f"**__{selfPlayer.memberObj.name}__ <:vote:1009960345428820059>** has voted")
@@ -339,11 +343,14 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
             embed.set_footer(text="Rest in Peace")
             await game.channelTownSquare.send(embed=embed)
             await asyncio.sleep(3)
-            if (targetPlayer.assignedRole is classes.roles.jester.Jester):
+            if (targetPlayer.assignedRole.name.lower() == "jester"):
                 embed = disnake.Embed(title="**The Jester has been lynched**", colour=disnake.Colour(0xffc3e7), description=f"All players who voted **Guilty** will be occupied the following **Night <:moon:934556372421451776>**. In addition, a player who voted **Guilty** will be haunted by the **Jester {targetPlayer.assignedRole.emoji}**")
 
                 embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/889968373612560394.webp?size=96&quality=lossless")
                 embed.set_footer(text="The Jester always get their revenge")
+                await game.channelTownSquare.send(embed=embed)
+                targetPlayer.wins = True
+                await asyncio.sleep(2)
 
         else:
             await asyncio.sleep(5)

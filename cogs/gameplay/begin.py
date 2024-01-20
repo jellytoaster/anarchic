@@ -45,6 +45,7 @@ def assignRoles(game:classes.game.Game):
             finalSelection = selection
 
         newPlayer.assignedRole = copy.deepcopy(role.Role.toRole(finalSelection))
+        newPlayer.game = game
         roles.remove(selection)
        
 async def sendRoles(game:classes.game.Game):
@@ -92,7 +93,7 @@ async def genChannels(game:classes.game.Game):
 
     embed.add_field(name="**How to Play💡**", value="Each player is secretly assigned a role at the start of the game and has to fulfill their goal. To see the list of roles, try typing `/roles`. The game alternates between a day and night cycle. For more infomation, use `/howtoplay`.", inline=False)
     embed.add_field(name="**Rules :pushpin:**", value="Here are a list of rules to follow.", inline=False)
-    embed.add_field(name="**No Screenshoting :camera_with_flash:**", value="Screenshoting is strictly forbidden, as it is cheeating ruins the game for everyone.", inline=False)
+    embed.add_field(name="**No Screenshoting :camera_with_flash:**", value="Screenshoting is strictly forbidden, as it is cheating and ruins the game for everyone.", inline=False)
     embed.add_field(name="**No Copy And Pasting :pencil:**", value="Copy and pasting is also considered breaking the rules, as it is also cheating.", inline=False)
     embed.add_field(name="No Direct Messaging 💬", value="Direct Messaging is not allowed as it ruins many game mechanics. ",inline=False)
     embed.add_field(name="Names Policy :man_gesturing_no:", value="Names must be set to a typeable english name, for players to be able to select you.",inline=False)
@@ -167,7 +168,7 @@ async def start(game:classes.game.Game):
 
     # Activate day one abilities
     for i in game.playervar:
-        for x in i.abilities:
+        for x in i.assignedRole.abilities:
             if x.type == classes.enums.AbilityType.DayOne and x.usableFunction(i, game) and utils.chargeUsable(x.charges):
                 x.invokeMethod(x.targetingOptions(i, game.playervar), i, game)
                 x.charges -= 1

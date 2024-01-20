@@ -8,12 +8,15 @@ class Role(Enum):
     Vigilante = "vigilante"
     Doctor = "doctor"
     Consort = "consort"
+    Jester = "jester"
 
 class Contractions(Enum):
     RandomTown = "Random Town"
     TownInvestigative = "Town Investigative"
     TownProtective = "Town Protective"
     RandomMafia = "Random Mafia"
+    RandomNeutral = "Random Neutral"
+    NeutralEvil = "Neutral Evil"
 
 class SetupDataType(Enum):
     Custom = 0
@@ -40,4 +43,5 @@ class AbilityType(Enum):
     Dusk = 3
     PassiveDawn = 4
     PassiveDusk = 5
-    DayOne = 6
+    PassiveEarly = 5
+    DayOne = 7
