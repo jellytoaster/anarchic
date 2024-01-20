@@ -4,7 +4,6 @@ import utils
 from disnake.ext import commands
 from classes import enums, setupData
 from classes import game as Game
-
 class setupManagement(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -28,9 +27,11 @@ class setupManagement(commands.Cog):
         embed.add_field(name=setupData.generateSetupName(), value=setupData.generateSetupList(), inline=False)
         await inter.response.send_message(embed=embed)
 
-    @setup.sub_command(name="add", description="Add an role to the setup", options=[disnake.Option("role", "The role to add", disnake.OptionType.string, True, choices=[string.capwords(e.value) for e in enums.Role] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions]), disnake.Option("amount", "How many of that role to add", disnake.OptionType.integer, False)])
+    @setup.sub_command(name="add", description="Add an role to the setup", options=[disnake.Option("role", "The role to add", disnake.OptionType.string, True), disnake.Option("amount", "How many of that role to add", disnake.OptionType.integer, False)])
     async def setup_addRole(self, inter:disnake.ApplicationCommandInteraction, role:str, amount:int=1):
         game:Game.Game = Game.Game.checkForGame(inter.guild)
+
+        role = string.capwords(role)
 
         if (len(game.players) == 0):
             await inter.response.send_message("There is no game yet. Use </join:1081377829637324800> to join!", ephemeral=True)
@@ -40,6 +41,10 @@ class setupManagement(commands.Cog):
             return
         if (game.hasStarted):
             await inter.response.send_message("The game has already started!", ephemeral=True)
+            return
+        
+        if (role not in [string.capwords(e.value) for e in enums.Role] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions]):
+            await inter.response.send_message("That isn't a role.", ephemeral=True)
             return
         
         game.setupData.addRole(role.lower(), amount)
@@ -49,9 +54,11 @@ class setupManagement(commands.Cog):
         embed.add_field(name=game.setupData.generateSetupName(), value=game.setupData.generateSetupList(), inline=False)
         await inter.response.send_message(embed=embed)
 
-    @setup.sub_command(name="remove", description="Remove an role from the setup", options=[disnake.Option("role", "The role to remove", disnake.OptionType.string, True, choices=[string.capwords(e.value) for e in enums.Role] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions]), disnake.Option("amount", "How many of that role to remove", disnake.OptionType.integer, False)])
-    async def setup_addRole(self, inter:disnake.ApplicationCommandInteraction, role:str, amount:int=1):
+    @setup.sub_command(name="remove", description="Remove an role from the setup", options=[disnake.Option("role", "The role to remove", disnake.OptionType.string, True), disnake.Option("amount", "How many of that role to remove", disnake.OptionType.integer, False)])
+    async def setup_removeRole(self, inter:disnake.ApplicationCommandInteraction, role:str, amount:int=1):
         game:Game.Game = Game.Game.checkForGame(inter.guild)
+
+        role = string.capwords(role)
 
         if (len(game.players) == 0):
             await inter.response.send_message("There is no game yet. Use </join:1081377829637324800> to join!", ephemeral=True)
@@ -62,7 +69,9 @@ class setupManagement(commands.Cog):
         if (game.hasStarted):
             await inter.response.send_message("The game has already started!", ephemeral=True)
             return
-        
+        if (role not in [string.capwords(e.value) for e in enums.Role] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions]):
+            await inter.response.send_message("That isn't a role.", ephemeral=True)
+            return
         code = game.setupData.removeRole(role.lower(), amount)
 
         if (code == 1):
@@ -126,3 +135,8 @@ class setupManagement(commands.Cog):
     async def presetAutocomplete(inter:disnake.ApplicationCommandInteraction, userInput:str):
         userInput=userInput.lower()
         return [string.capwords(setup) for setup in setupData.presetSetups.keys() if userInput in setup.lower()]
+    
+    @setup_addRole.autocomplete("role")
+    @setup_removeRole.autocomplete("role")
+    async def autoCompleteRole(inter, input):
+        return [string.capwords(e.value) for e in enums.Role if input.lower() in e.value.lower()] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions if input.lower() in e.value.lower()]
