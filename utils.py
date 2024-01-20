@@ -2,7 +2,7 @@ import disnake
 import classes.game
 import classes.player
 import classes.enums
-emojis = {"mafia" : "<:mafia:1007768566789050378>", "evil": ":axe:", "good" : ":angel:", "randomtown" : "<:town:1007768656341651547>", "suspicious" : ":question:", "innocent" : ":thumbsup:", "neutral" : ":neutral_face:", "towninvestigative":"\🔎", "tm":"\🎶", "rt":"<:town:1007768656341651547>","townkilling":"\🔫","townprotective":"\💉","randommafia":"<:mafia:1007768566789050378>","ms":"\🥀","md":"\🎭","mk":"<:maf:891739940055052328>","ts":"\💬","associate": "<:assoicon:1006333104920735787>", "villager": "<:villyicon:1007714759409414274>", "associate": "<:assoicon:1006333104920735787>", "cop": "<:copicon2:889672912905322516>", "detective": "<:deticon2:889673135438319637>", "tracker": "<:trackicon:922885543812005949>", "lookout": "<:loicon2:889673190392078356>", "doctor": "<:docicon2:890333203959787580>", "vigilante": "<:enficon2:890339050865696798>", "attendant": "<:atticon:957688274418286602>", "psychic": "<:psyicon:1010900225130504192>", "mayor": "<:mayoricon:922566007946629131>", "mafioso": "<:maficon2:891739940055052328>", "framer": "<:frameicon2:890365634913902602>", "consigliere": "<:consigicon2:896154845130666084>", "janitor": "<:janiicon:923219547325091840>", "consort": "<:consicon2:890336628269281350>",  "headhunter": "<:hhicon2:891429754643808276>", "executioner": "<:hhicon2:891429754643808276>", "jester": "<:atticon:957688274418286602>", "framer": "<:framed:890365634913902602>", "agent": "<:agenticon2:1011769559662985246>", "lookout": "<:loicon2:1011291078248366110>,", "janitor": "<:janiicon:939311465796599818>", "bodyguard": "<:bgicon:1018521495439429702>"}
+emojis = {"mafia" : "<:mafia:1007768566789050378>", "evil": ":axe:", "good" : ":angel:", "randomtown" : "<:town:1007768656341651547>", "suspicious" : ":question:", "innocent" : ":thumbsup:", "neutral" : ":neutral_face:", "towninvestigative":"\🔎", "tm":"\🎶", "rt":"<:town:1007768656341651547>","townkilling":"\🔫","townprotective":"\💉","randommafia":"<:mafia:1007768566789050378>","ms":"\🥀","md":"\🎭","mk":"<:maf:891739940055052328>","ts":"\💬","associate": "<:assoicon:1006333104920735787>", "villager": "<:villyicon:1007714759409414274>", "associate": "<:assoicon:1006333104920735787>", "cop": "<:copicon2:889672912905322516>", "detective": "<:deticon2:889673135438319637>", "tracker": "<:trackicon:922885543812005949>", "lookout": "<:loicon2:889673190392078356>", "doctor": "<:docicon2:890333203959787580>", "vigilante": "<:enficon2:890339050865696798>", "attendant": "<:atticon:957688274418286602>", "psychic": "<:psyicon:1010900225130504192>", "mayor": "<:mayoricon:922566007946629131>", "mafioso": "<:maficon2:891739940055052328>", "framer": "<:frameicon2:890365634913902602>", "consigliere": "<:consigicon2:896154845130666084>", "janitor": "<:janiicon:923219547325091840>", "consort": "<:consicon2:890336628269281350>",  "headhunter": "<:hhicon2:891429754643808276>", "executioner": "<:hhicon2:891429754643808276>", "jester": "<:jesticon2:889968373612560394>", "framer": "<:framed:890365634913902602>", "agent": "<:agenticon2:1011769559662985246>", "lookout": "<:loicon2:1011291078248366110>,", "janitor": "<:janiicon:939311465796599818>", "bodyguard": "<:bgicon:1018521495439429702>"}
 
 def roleEmoji(name:str):
     try:
@@ -93,12 +93,12 @@ async def modifyReadPermissions(channel:disnake.channel.TextChannel, game:classe
     await channel.set_permissions(playerRole, overwrite=overwrite)
 
 def chargeUsable(chargeAmt:int):
-    if (chargeAmt < 0 or chargeAmt == -1):
+    if (chargeAmt > 0 or chargeAmt == -1):
         return True
     return False
 
 # Targeting options templates
-def notMeAndNotDead(me, allPlayers):
+def notMeAndNotDead(me, allPlayers, game):
     res = []
     for i in allPlayers:
         if (i.dead == False and i.memberObj.id != me.memberObj.id):
@@ -106,7 +106,7 @@ def notMeAndNotDead(me, allPlayers):
 
     return res
 
-def notMafiaAndNotDead(me, allPlayers):
+def notMafiaAndNotDead(me, allPlayers, game):
     res = []
     for i in allPlayers:
         if (i.dead == False and i.assignedRole.faction != classes.enums.Faction.Mafia):
@@ -115,19 +115,19 @@ def notMafiaAndNotDead(me, allPlayers):
     return res
 
 
-def literallyAnyone(me, allPlayers):
+def literallyAnyone(me, allPlayers, game):
     return allPlayers
 
-def playersWhoVotedGuilty(me, allPlayers):
+def playersWhoVotedGuilty(me, allPlayers, game):
     res = []
     for i in allPlayers:
-        if (i not in me.game.votedGuilty and i not in me.game.votedInnocent and i != me):
+        if (i in game.votedGuilty):
             res.append(i)
 
     return res
 
 
-def notDead(me, allPlayers):
+def notDead(me, allPlayers, game):
     res = []
     for i in allPlayers:
         if (i.dead == False):
@@ -146,7 +146,7 @@ def reasonToText(reason:classes.enums.DeathReason, mention):
     # # if (reason == DeathReason.Guilt):
     # #     return "They died from **Guilt**."
     if (reason == classes.enums.DeathReason.Jester):
-        return "**killed over lynching the Jester** <:jesticon2:889968373612560394>."
+        return f"{mention} was killed over lynching the **Jester** <:jesticon2:889968373612560394>."
     if (reason == classes.enums.DeathReason.Plague):
         return f"{mention} was **taken by the Plague**."
     # if (reason == DeathReason.Bodyguard):
@@ -186,13 +186,13 @@ async def getCurrentLynch(votingData, game):
 
 def createVotingResults(embed, game:classes.game.Game, guilties, innocents):
     
-    embed.add_field(name="**`Guilty ✅`**", value="\n".join([i.memberObj.mention for i in guilties if i.dead == False]))
+    embed.add_field(name="**`Guilty ✅`**", value="\n".join([i.memberObj.mention for i in guilties if not i.dead]) if any(not i.dead for i in guilties) else ":x: **None**")
 
-    embed.add_field(name="**`Pardon ❌`**", value="\n".join([i.memberObj.mention for i in innocents if i.dead == False]))
+    embed.add_field(name="**`Pardon ❌`**", value="\n".join([i.memberObj.mention for i in innocents if not i.dead]) if any(not i.dead for i in innocents) else ":x: **None**")
 
     abstained = list(set(game.playervar) - set(guilties) - set(innocents))
 
-    embed.add_field(name="**`Abstain ☑️`**", value="\n".join([i.memberObj.mention for i in abstained if i.dead == False and i != game.accusedPlayer]))
+    embed.add_field(name="**`Abstain ☑️`**", value="\n".join([i.memberObj.mention for i in abstained if i.dead == False and i != game.accusedPlayer]) if any(not i.dead and i != game.accusedPlayer for i in abstained) else ":x: **None**")
 
     embed.set_footer(text="Most trial results are democratic")
 
@@ -208,6 +208,9 @@ def chargeCount(charges):
     
 def true(i, game):
     return True
+
+def notDead(i, game):
+    return not i.dead
 
 def jesterDeathCheck(i:classes.player.Player, game:classes.game.Game):
     return game.currentRound == i.deathRound and i.deathReason == classes.enums.DeathReason.Lynch

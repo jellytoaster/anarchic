@@ -1,7 +1,7 @@
 import os
 
 PREFIX = ">"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 BUILD = "Beta"
 BETATOKEN = os.getenv("BETATOKEN")
 TOKEN = os.getenv("TOKEN")

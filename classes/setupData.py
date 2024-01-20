@@ -53,7 +53,9 @@ class SetupData():
         return
     
     def generateSetupName(self):
-        if (self.type == enums.SetupDataType.Custom):
+        if (self.roles == []):
+            return "Empty"
+        elif (self.type == enums.SetupDataType.Custom):
             return f"__Custom :triangular_flag_on_post: ({len(self.roles)}P)__"
         elif (self.type == enums.SetupDataType.Preset):
             return f"__{SetupData.getPresetSetup(self.presetIndex)[1][0]} ({len(self.roles)}P)__"
@@ -61,7 +63,9 @@ class SetupData():
             return f"__All Any :game_die: ({len(self.roles)}P)__"
 
     def generateSetupNameWithoutNumbers(self):
-        if (self.type == enums.SetupDataType.Custom):
+        if (self.roles == []):
+            return "Empty"
+        elif (self.type == enums.SetupDataType.Custom):
             return f"Custom "
         elif (self.type == enums.SetupDataType.Preset):
             return f"{SetupData.getPresetSetup(self.presetIndex)[1][0]}"
