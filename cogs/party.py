@@ -31,7 +31,7 @@ class PartyCog(commands.Cog):
             if (i.raw_status != "offline" or i.is_on_mobile()):
                 onlinePlayers += 1
 
-        embed.set_footer(text=f"{onlinePlayers}/{len(game.players)} players online", icon_url=inter.author.avatar.url)
+        embed.set_footer(text=f"{onlinePlayers}/{len(game.players)} players online", icon_url=inter.author.display_avatar.url)
 
         await inter.response.send_message(embed=embed)
     @commands.slash_command(name="join", description="Join the game!")
@@ -104,11 +104,8 @@ class PartyCog(commands.Cog):
         if (game.hasStarted):
             await inter.response.send_message("You're not allowed to promote when a game is in progress!", ephemeral=True)
 
-        host = game.players[0]
-        target = game.players[game.players.index(player)]
-
-        game.players[0] = target
-        game.players[game.players.index(player)] = host
+        p = game.players.index(player)
+        game.players[0], game.players[p] = game.players[p], game.players[0]
 
         embed = disnake.Embed(title=f"{player.display_name} has been promoted!", description=f"**Current Players:** `{str(len(game.players))}`\n**Current Host:** {game.findHostMention()}\n**Setup:** {game.setupData.generateSetupNameWithoutNumbers()}", colour=disnake.Colour(0xf5cbff))
         embed.set_thumbnail(url=player.display_avatar.url)
