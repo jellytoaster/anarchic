@@ -125,7 +125,7 @@ class setupManagement(commands.Cog):
         game.setupData.type = enums.SetupDataType.Preset
         game.setupData.presetIndex = presetSetup[0]
 
-        embed = disnake.Embed(title=f"**Applied Preset: {presetSetup[0]}**", colour=disnake.Colour(0xcd95ff))
+        embed = disnake.Embed(title=f"**Applied Preset: {game.setupData.generateSetupNameWithoutNumbers()}**", colour=disnake.Colour(0xcd95ff))
         embed.set_thumbnail(url="https://images-ext-2.discordapp.net/external/O3tABe1id1w0dcI-B8MMo-DgXI9Co9xNaS6QSbjKU2o/%3Fsize%3D1024/https/cdn.discordapp.com/icons/753967387149074543/c908a07ef8d6165ab31770e4b47f38ca.webp")
         embed.add_field(name=game.setupData.generateSetupName(), value=game.setupData.generateSetupList(), inline=False)
         embed.set_footer(text="You can modify the preset setup")
