@@ -1,3 +1,4 @@
+from typing import Optional
 import disnake
 import string
 import utils
@@ -201,20 +202,84 @@ class setupManagement(commands.Cog):
                 super().__init__(title="Input setup code", components=components)
 
             async def callback(self, interaction:disnake.ModalInteraction):
+                data = None
                 try:
-                    game.setupData = setupData.SetupData.fromData(base64.b64decode(base64.b64decode(str.encode(interaction.text_values["code"]))).decode(), game)
-
-                    embed = disnake.Embed(title="Setup imported!", colour=disnake.Colour(0xcd95ff), description=f"Your **{len(game.setupData.roles)} player** setup has been imported into your party.")
-                    embed.add_field(game.setupData.generateSetupName(), game.setupData.generateSetupList())
-
-                    embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421")
-                    embed.set_footer(text="Have fun!", icon_url=inter.author.display_avatar.url)
-
-
-                    await interaction.response.send_message(embed=embed)
+                    data = setupData.SetupData.fromData(base64.b64decode(base64.b64decode(str.encode(interaction.text_values["code"]))).decode(), game)
                 except:
                     await interaction.response.send_message("Your data is invalid!", ephemeral=True)
                     return
+
+                embed = disnake.Embed(title="Import Setup?", colour=disnake.Colour(0xcd95ff), description=f"Do you want to import this **{len(data.roles)} player** setup?")
+                embed.add_field(data.generateSetupName(), data.generateSetupList())
+
+                embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421")
+
+                class ImportSetupConfirmation(disnake.ui.View):
+                    def __init__(self, *, timeout: float | None = 180) -> None:
+                        super().__init__(timeout=timeout)
+
+                    async def on_timeout(self) -> None:
+                        for child in self.children:
+                            child.disabled = True
+
+                        orgMsg = await interaction.original_message()
+                        newEmbed = orgMsg.embeds[0].set_footer(text="This interaction has timed out. Use /setup import again to use the buttons.")
+
+                        await interaction.edit_original_message(embed=newEmbed, view=self)
+
+                    @disnake.ui.button(label="Yes", style=disnake.ButtonStyle.green, emoji="✅")
+                    async def yes(self, button, confirminteraction):
+                        game.setupData = data
+
+                        if (len(game.players) == 0):
+                            await confirminteraction.response.send_message("There is no game yet. Use </join:1081377829637324800> to join!", ephemeral=True)
+                            return
+                        if (confirminteraction.author != game.players[0]):
+                            await confirminteraction.response.send_message("You are not the host!", ephemeral=True)
+                            return
+                        if (game.hasStarted):
+                            await confirminteraction.response.send_message("The game has already started!", ephemeral=True)
+                            return
+                        
+                        game.setupData = data
+
+                        embed = disnake.Embed(title="Setup imported!", colour=disnake.Colour(0xcd95ff), description=f"Your **{len(game.setupData.roles)} player** setup has been imported into your party.")
+                        embed.add_field(game.setupData.generateSetupName(), game.setupData.generateSetupList())
+
+                        embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421")
+                        embed.set_footer(text="Have fun!", icon_url=inter.author.display_avatar.url)
+
+                        for child in self.children:
+                            child.disabled = True
+
+                        await confirminteraction.response.edit_message(embed=embed, view=self)
+
+
+                    @disnake.ui.button(label="No", style=disnake.ButtonStyle.red, emoji="❌")
+                    async def nah(self, button, confirminteraction):
+                        if (len(game.players) == 0):
+                            await confirminteraction.response.send_message("There is no game yet. Use </join:1081377829637324800> to join!", ephemeral=True)
+                            return
+                        if (confirminteraction.author != game.players[0]):
+                            await confirminteraction.response.send_message("You are not the host!", ephemeral=True)
+                            return
+                        if (game.hasStarted):
+                            await confirminteraction.response.send_message("The game has already started!", ephemeral=True)
+                            return
+
+                        embed = disnake.Embed(title="Setup import cancelled.", colour=disnake.Colour(0xcd95ff), description=f"Your **{len(data.roles)} player** setup has **not** been imported.")
+                        embed.add_field(data.generateSetupName(), data.generateSetupList())
+
+                        embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421")
+                        embed.set_footer(text="Maybe next time?", icon_url=inter.author.display_avatar.url)
+
+                        for child in self.children:
+                            child.disabled = True
+
+                        await confirminteraction.response.edit_message(embed=embed, view=self)
+
+
+                await interaction.response.send_message(embed=embed, view=ImportSetupConfirmation())             
 
         await inter.response.send_modal(DataRequestModal())
 
