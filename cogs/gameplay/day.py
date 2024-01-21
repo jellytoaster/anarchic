@@ -103,6 +103,9 @@ async def votingCycle(game:classes.game.Game):
         for i in game.playervar:
             votingData[i.memberObj.id] = []
 
+        game.votedInnocent = []
+        game.votedGuilty = []
+
 
 
         embed = disnake.Embed(title=f"`Day {str(game.dayNum)} ☀️ | Noon Phase`", colour=disnake.Colour(0xbbf6ff), description="The sun rises to it's peak\n```json\nNoon ends in 90 seconds```")
@@ -237,7 +240,7 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
         embed.set_footer(text="You have 20 seconds to vote", icon_url=targetPlayer.memberObj.display_avatar.url)
 
         game.votedInnocent = []
-        game.votedGulity = []
+        game.votedGuilty = []
 
         class Fatedecider(disnake.ui.View):
             def __init__(self):
@@ -351,6 +354,14 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
                 await game.channelTownSquare.send(embed=embed)
                 targetPlayer.wins = True
                 await asyncio.sleep(2)
+            for i in classes.player.Player.getPlayersWithRole("headhunter", game):
+                if (i.externalRoleData["target"] == targetPlayer):
+                    i.externalRoleData["points"] += 1
+                    i.externalRoleData["target"] = None
+
+                    if (i.externalRoleData["points"] == 2):
+                        i.wins = True
+
 
         else:
             await asyncio.sleep(5)

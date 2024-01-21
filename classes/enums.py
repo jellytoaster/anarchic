@@ -9,6 +9,7 @@ class Role(Enum):
     Doctor = "doctor"
     Consort = "consort"
     Jester = "jester"
+    Headhunter = "headhunter"
 
 class Contractions(Enum):
     RandomTown = "Random Town"
@@ -19,9 +20,10 @@ class Contractions(Enum):
     NeutralEvil = "Neutral Evil"
 
 class SetupDataType(Enum):
-    Custom = 0
-    Preset = 1
-    AllAny = 2
+    Custom = "Custom Setup - "
+    Preset = "Preset Setup - "
+    AllAny = ""
+    Imported = "Imported Setup - "
 
 class Faction(Enum):
     Town = "town"
@@ -35,6 +37,7 @@ class DeathReason(Enum):
     Lynch = 3
     Plague = 4
     Jester = 5
+    Headhunter = 6
 
 class AbilityType(Enum):
     Passive = 0
