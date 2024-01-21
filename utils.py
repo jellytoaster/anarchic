@@ -157,7 +157,7 @@ def reasonToText(reason:classes.enums.DeathReason, mention):
     #     return "They were killed by a member of the **Psychopath**."
     # if (reason == DeathReason.Cleaned):
     #     return "We could not determine how they died."
-    return f"{mention} died"
+    return f"{mention} **dissapeared**."
 
 async def getCurrentLynch(votingData, game):
     """Utilises the class's voting data to generate a current lynch as a string. Will most likely throw an error when a invalid voting data is part of the class"""
@@ -212,8 +212,15 @@ def true(i, game):
 def notDead(i, game):
     return not i.dead
 
+def headstart(i, game):
+    return not game.currentRound == 0
+
 def jesterDeathCheck(i:classes.player.Player, game:classes.game.Game):
     return game.currentRound == i.deathRound and i.deathReason == classes.enums.DeathReason.Lynch
+
+def diedThisRound(i:classes.player.Player, game:classes.game.Game):
+    return game.currentRound == i.deathRound
+
 
 def errorToText(errorStr:str):
     errorStr = errorStr.lower()

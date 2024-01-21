@@ -3,7 +3,7 @@ import string
 import utils
 
 presetSetups = {
-    "pi e7" : ("πe7 :1234:", ["cop", "doctor", "villager", "villager", "villager", "consort", "mafioso"]), "generic" : ("generic :skull:",  ["cop", "doctor", "villager", "villager", "mafioso"])
+    "pi e7" : ("πe7 :1234:", ["cop", "doctor", "villager", "villager", "villager", "consort", "mafioso"]), "all any?" : ("All Any...? :game_die:",  ["random town", "random town", "random town", "random town", "random town", "mafioso", "random mafia"]), "~HSmafia in the middle": ("Mafia in the Middle <:maficon:891739940055052328>", ["cop", "doctor", "mafioso", "associate", "villager", "vigilante"])
 }
 
 class SetupData():
@@ -13,6 +13,21 @@ class SetupData():
         self.name = ""
         self.type = enums.SetupDataType.Custom
         self.presetIndex = 0
+
+    def fromData(data:str, game):
+        newData = SetupData(game)
+        roleData = data.split("||")
+
+        if (not roleData[0] == "ANARCHIC"):
+            raise ValueError
+
+        roleData.pop(1)
+        roleData.pop(0)
+        newData.roles = roleData
+
+        newData.type = enums.SetupDataType.Imported
+        newData.name = data.split("||")[1]
+        return newData
 
     def addRole(self, role:enums.Role, amount:int, changeToCustom:bool=True):
         if (changeToCustom):
@@ -48,9 +63,16 @@ class SetupData():
     
     def getPresetSetup(name:str):
         for key, value in presetSetups.items():
+            key = key.replace("~HS", "")
             if (key == name):
-                return (key, value)
+                return (key.replace("~HS", ""), value)
         return
+    
+    def isPresetHeadstart(name:str):
+        for key in presetSetups.keys():
+            if (key == name):
+                return key.startswith("~HS")
+        return False
     
     def generateSetupName(self):
         if (self.roles == []):
@@ -61,6 +83,8 @@ class SetupData():
             return f"__{SetupData.getPresetSetup(self.presetIndex)[1][0]} ({len(self.roles)}P)__"
         elif (self.type == enums.SetupDataType.AllAny):
             return f"__All Any :game_die: ({len(self.roles)}P)__"
+        elif (self.type == enums.SetupDataType.Imported):
+            return f"__{self.name} :game_die: ({len(self.roles)}P)__"
 
     def generateSetupNameWithoutNumbers(self):
         if (self.roles == []):
@@ -71,3 +95,5 @@ class SetupData():
             return f"{SetupData.getPresetSetup(self.presetIndex)[1][0]}"
         elif (self.type == enums.SetupDataType.AllAny):
             return f"All Any"
+        elif (self.type == enums.SetupDataType.Imported):
+            return f"{self.name} :game_die:"

@@ -41,6 +41,7 @@ class Game():
         self.rolePlayer = None
         self.roleDead = None
         self.dayNum = 0
+        self.headStart = False
         self.finished = False
         self.daysWithoutDeath = 0
         self.accusedPlayer = None

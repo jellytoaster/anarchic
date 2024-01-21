@@ -9,6 +9,7 @@ import disnake.ext.commands.errors as error
 import copy
 import classes.enums
 from classes import player, role
+import classes.setupData as setupData
 from cogs import setupManagement
 from disnake.ext import commands
 import classes.enums
@@ -137,7 +138,10 @@ async def prep(game:classes.game.Game):
         assignRoles(game)
         await asyncio.sleep(2)
         await genChannels(game)
-        
+        if (setupData.isPresetHeadstart()):
+            game.headStart = True
+        else:
+            game.headStart = False
         await sendRoles(game)
         player.Player.initPlayerVars(game)
     except Exception as e:
@@ -191,6 +195,12 @@ async def start(game:classes.game.Game):
             if x.type == classes.enums.AbilityType.DayOne and x.usableFunction(i, game) and utils.chargeUsable(x.charges):
                 await x.invokeMethod(x.targetingOptions(i, game.playervar, game), i, game)
                 x.charges -= 1
+
+    if (game.headStart == True):
+        embed = disnake.Embed(title=":warning: This game is a headstart game!", colour=disnake.Colour(0xd0021b), description="The <:maficon:891739940055052328>**Mafioso** will not be able to kill on the first night.")
+        embed.set_footer(text="Good luck.")
+        await game.channelTownSquare.send(embed=embed)
+
 
     await asyncio.sleep(15)
     await asyncio.create_task(cogs.gameplay.night.nightCycle(game))
