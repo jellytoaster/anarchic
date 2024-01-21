@@ -8,6 +8,7 @@ deathEmbeds = {classes.enums.DeathReason.Mafia : disnake.Embed(title="**You were
                classes.enums.DeathReason.Jester : disnake.Embed(title="**You could not get over your guilt of lynching the Jester <:jesticon2:889968373612560394>**", colour=disnake.Colour(0xf1cbe2), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/889968373612560394.webp?size=80"),
                classes.enums.DeathReason.Enforcer : disnake.Embed(title="**You were eliminated by a Vigilante**", colour=disnake.Colour(0x7ed321), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/890339050865696798.webp?size=96&quality=lossless"),
                classes.enums.DeathReason.Lynch : disnake.Embed(title="You have been lynched by the Town", colour=disnake.Colour(0x9b9b9b), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://images-ext-1.discordapp.net/external/4P42Xlx0OwuRydI3QSE8l3eweFEqd_tlVJcdZF9ZO6I/%3Fwidth%3D805%26height%3D634/https/images-ext-2.discordapp.net/external/LlOBlIZEHHfRmfQn8_dhpUD6gN0CUWMecRcDZjd9CTs/%253Fwidth%253D890%2526height%253D701/https/media.discordapp.net/attachments/765738640554065962/877706810763657246/unknown.png?width=724&height=570"),
+               classes.enums.DeathReason.Lynch : disnake.Embed(title="You got your targets lynched!", colour=disnake.Colour(0x9b9b9b), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://images-ext-1.discordapp.net/external/4P42Xlx0OwuRydI3QSE8l3eweFEqd_tlVJcdZF9ZO6I/%3Fwidth%3D805%26height%3D634/https/images-ext-2.discordapp.net/external/LlOBlIZEHHfRmfQn8_dhpUD6gN0CUWMecRcDZjd9CTs/%253Fwidth%253D890%2526height%253D701/https/media.discordapp.net/attachments/765738640554065962/877706810763657246/unknown.png?width=724&height=570"),
                classes.enums.DeathReason.Plague : disnake.Embed(title="**You were taken by the Plague**", colour=disnake.Colour(0xb8e986), description="**You have died <:rip:878415658885480468>**"),
                classes.enums.DeathReason.Unknown : disnake.Embed(title="You died to an unknown reason")}
 
@@ -28,6 +29,8 @@ class Player():
         self.wins = False
         self.deathRound = 0
         self.assignedGame = game
+        
+        self.externalRoleData = {}
 
 
         game.playervar.append(self)
@@ -37,13 +40,14 @@ class Player():
             i.isSuspicious = i.assignedRole.suspiciousRole
 
     def get(id:int, game:Game):
-        for i in game.playervar:
-            i:Player
-            if (i.id == id):
-                return i
-            
-        return None
+        return [i for i in game.playervar if i.id == id][0]
+
+    def getPlayersWithRole(roleName:str, game:Game):
+        return [i for i in game.playervar if i.assignedRole.name == roleName]
     
+    def getPlayersWithFactions(faction:classes.enums.Faction, game:Game):
+        return [i for i in game.playervar if i.assignedRole.faction == faction]
+
     # Kill player, True if successful and False otherwise.
     async def kill(self, deathReason:classes.enums.DeathReason, game:Game, force=False):
         if (self.defended == None or force == True):

@@ -6,7 +6,7 @@ import disnake.utils
 from disnake import Option, OptionType
 from disnake.ext import commands
 from disnake.interactions import ApplicationCommandInteraction
-
+import cogs.basic as basic
 import config
 import classes.game
 import utils
@@ -56,7 +56,7 @@ class adminCommands(commands.Cog):
     async def fj(inter, player):
         game = classes.game.Game.checkForGame(player.guild)
         if (player in game.players):
-            await iter.response.send_message("They are already in the game! Did you mean to use </leave:1081377829637324801> instead?", ephemeral=True)
+            await inter.response.send_message("They are already in the game! Did you mean to use </leave:1081377829637324801> instead?", ephemeral=True)
             return
         if (game.hasStarted):
             await inter.response.send_message("They're not allowed to join when a game is in progress!", ephemeral=True)
@@ -68,4 +68,10 @@ class adminCommands(commands.Cog):
         embed.set_thumbnail(url=player.display_avatar.url)
 
         await inter.response.send_message(embed=embed)
-        
+
+    @commands.slash_command(name="sendchangelog", description="send changelog to a channel", options=[Option("channel", "wher", OptionType.channel, True), Option("version", "ver", OptionType.string, True)], guild_ids=config.TEST_GUILDS)
+    @commands.check(adminCheck)
+    async def sendchangelog(self, inter, channel, version):
+        embed = basic.basic.getChangelog(version)[1].set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421").set_footer(text="Have fun!", icon_url=self.bot.user.display_avatar.url)
+        await channel.send(embed=embed)
+        await inter.response.send_message('done', ephemeral=True)
