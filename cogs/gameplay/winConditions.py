@@ -8,6 +8,8 @@ async def checkForWin(game:classes.game.Game):
     differentFactions = []
 
     for player in game.playervar:
+        if player.assignedRole.faction == classes.enums.Faction.Neutral:
+            continue
         if player.assignedRole.faction not in differentFactions and player.dead == False:
             differentFactions.append(player.assignedRole.faction)
 
