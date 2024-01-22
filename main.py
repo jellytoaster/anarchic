@@ -4,6 +4,7 @@ import os
 import config
 import cogs
 from classes.role import Role
+from classes.contraction import Contraction
 from cogs import party, setupManagement, admin, endGame, basic, help
 from disnake.ext import commands
 
@@ -22,8 +23,9 @@ async def on_ready():
 
 os.system("cls")
 
-print("Initializing roles")
+print("Initializing classes/objects")
 Role.init()
+Contraction.initContractions()
 
 print("Loading cogs")
 bot.add_cog(cogs.party.PartyCog(bot))

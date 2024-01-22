@@ -1,9 +1,11 @@
 from typing import Optional
+import classes.contraction
 import disnake
 import string
 import utils
 import base64
 from disnake.ext import commands
+import classes.role
 from classes import enums, setupData
 from classes import game as Game
 
@@ -45,7 +47,7 @@ class setupManagement(commands.Cog):
             await inter.response.send_message("The game has already started!", ephemeral=True)
             return
         
-        if (role not in [string.capwords(e.value) for e in enums.Role] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions]):
+        if (role not in [string.capwords(e.name) for e in classes.role.Role.allRoles] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions]):
             await inter.response.send_message("That isn't a role.", ephemeral=True)
             return
         
@@ -75,7 +77,7 @@ class setupManagement(commands.Cog):
         if (game.hasStarted):
             await inter.response.send_message("The game has already started!", ephemeral=True)
             return
-        if (role not in [string.capwords(e.value) for e in enums.Role] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions]):
+        if (role not in [string.capwords(e.name) for e in classes.role.Role.allRoles] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions]):
             await inter.response.send_message("That isn't a role.", ephemeral=True)
             return
 
@@ -291,4 +293,4 @@ class setupManagement(commands.Cog):
     @setup_addRole.autocomplete("role")
     @setup_removeRole.autocomplete("role")
     async def autoCompleteRole(inter, input):
-        return [string.capwords(e.value) for e in enums.Role if input.lower() in e.value.lower()] + [string.capwords(e.value).replace('contraction', '') for e in enums.Contractions if input.lower() in e.value.lower()]
+        return [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if input.lower() in e.display_name.lower()]

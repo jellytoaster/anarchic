@@ -1,24 +1,5 @@
 from enum import Enum
 
-class Role(Enum):
-    Cop = "cop"
-    Mafioso = "mafioso"
-    Villager = "villager"
-    Associate = "associate"
-    Vigilante = "vigilante"
-    Doctor = "doctor"
-    Consort = "consort"
-    Jester = "jester"
-    Headhunter = "headhunter"
-
-class Contractions(Enum):
-    RandomTown = "Random Town"
-    TownInvestigative = "Town Investigative"
-    TownProtective = "Town Protective"
-    RandomMafia = "Random Mafia"
-    RandomNeutral = "Random Neutral"
-    NeutralEvil = "Neutral Evil"
-
 class SetupDataType(Enum):
     Custom = "Custom Setup - "
     Preset = "Preset Setup - "
