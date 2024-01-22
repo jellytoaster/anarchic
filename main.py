@@ -28,12 +28,13 @@ os.system("cls")
 print("Initializing classes/objects")
 
 # Init roles in /classes/roles
-for file in os.listdir("/classes/roles"):
-    path = os.path.join("/classes/roles", path)
+for file in os.listdir("classes/roles"):
+    path = os.path.join("classes/roles/", file)
+
     module = os.path.splitext(os.path.basename(path))[0]
 
     try:
-        module = importlib.import_module(module)
+        module = importlib.import_module("classes.roles." + module)
         module.init()
     except Exception as e:
         print(f"Could not initialize role in {path}!: {e}")
