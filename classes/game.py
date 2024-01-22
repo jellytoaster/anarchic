@@ -30,6 +30,7 @@ class Game():
         self.accusedPlayer = None
         self.votedInnocent = []
         self.votedGuilty = []
+        self.headStart= False
         self.currentRound = 0
 
     def reset(self):

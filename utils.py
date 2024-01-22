@@ -213,7 +213,7 @@ def notDead(i, game):
     return not i.dead
 
 def headstart(i, game):
-    return not game.currentRound == 0
+    return game.currentRound == 0 if game.headStart == True else True
 
 def jesterDeathCheck(i:classes.player.Player, game:classes.game.Game):
     return game.currentRound == i.deathRound and i.deathReason == classes.enums.DeathReason.Lynch
