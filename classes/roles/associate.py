@@ -5,6 +5,10 @@ import disnake
 import classes.ability
 import classes.player
 import classes.enums
+from classes.enums import Faction
+
+def init():
+    Associate("Associate", Faction.Mafia)
 
 class Associate(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):

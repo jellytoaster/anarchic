@@ -5,10 +5,14 @@ import disnake
 import classes.ability
 import classes.player
 import classes.enums
+from classes.enums import Faction
+
+def init():
+    Villager("Villager", Faction.Town)
 
 class Villager(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
-
+        # imagine being a villager honestly
         super().__init__(name, faction)
         self.suspiciousRole = False
         self.color = 0x7ed321

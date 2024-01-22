@@ -5,7 +5,10 @@ import disnake
 import classes.ability
 import classes.player
 import classes.enums
+from classes.enums import Faction
 
+def init():
+    Mafioso("Mafioso", Faction.Mafia)
 
 async def kill(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayer:classes.player.Player = targetPlayers[0]

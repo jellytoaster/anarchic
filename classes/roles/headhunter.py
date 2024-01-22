@@ -6,6 +6,10 @@ import random
 import classes.ability
 import classes.player
 import classes.enums
+from classes.enums import Faction
+
+def init():
+    Headhunter("Headhunter", Faction.Neutral)
 
 def twoPoints(me, game):
     return me.externalRoleData["points"] == 2

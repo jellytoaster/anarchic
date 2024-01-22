@@ -4,7 +4,10 @@ import classes.role as role
 import disnake
 import classes.ability
 import classes.player
-import classes.enums
+from classes.enums import Faction
+
+def init():
+    Consort("Consort", Faction.Mafia)
 
 def roleblockplayer(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayers[0].isRoleBlocked = True
