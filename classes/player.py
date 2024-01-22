@@ -77,3 +77,7 @@ class Player():
 
 
             return False
+        
+    def whoVisitedMe(self):
+        return [i for i in self.game.playervar if self in i.nightTargettedPlayers]
+

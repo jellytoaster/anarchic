@@ -1,4 +1,3 @@
-import utils
 from classes.enums import Faction
 
 class Role:
@@ -34,6 +33,8 @@ class Role:
         import classes.roles.consort
         import classes.roles.jester
         import classes.roles.headhunter
+        import classes.roles.tracker
+        import classes.roles.lookout
 
         classes.roles.cop.Cop("Cop", Faction.Town)
         classes.roles.mafioso.Mafioso("Mafioso", Faction.Mafia)
@@ -44,3 +45,5 @@ class Role:
         classes.roles.consort.Consort("Consort", Faction.Mafia)
         classes.roles.jester.Jester("Jester", Faction.Neutral)
         classes.roles.headhunter.Headhunter("Headhunter", Faction.Neutral)
+        classes.roles.tracker.Tracker("Tracker", Faction.Town)
+        classes.roles.lookout.Lookout("Lookout", Faction.Town)
