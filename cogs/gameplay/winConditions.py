@@ -1,5 +1,6 @@
 import disnake
 import utils
+import random
 import classes.player
 import classes.game
 import classes.enums
@@ -24,7 +25,10 @@ async def checkForWin(game:classes.game.Game):
             
         elif (differentFactions[0] == classes.enums.Faction.Town):
             embed.title="**__<a:win:878421027703631894> The Town Wins <:town:1007768656341651547> <a:win:878421027703631894>!__**"
-            embed.set_image(url="https://media.discordapp.net/attachments/765738640554065962/879065891751464960/unknown.png?width=560&height=701")
+            if (random.randint(1, 2) == 1):
+                embed.set_image(url="https://media.discordapp.net/attachments/765738640554065962/879065891751464960/unknown.png?width=560&height=701")
+            else:
+                embed.set_image(url="https://media.discordapp.net/attachments/1125486624453709874/1198749290911256707/image.png?ex=65c00946&is=65ad9446&hm=7c14fdd7f99e448af600266af57040a7acd5f9bd1012d81f6f4b31391aad98b7&=&format=webp&quality=lossless&width=506&height=634")
             embed.color = 0x7ed321
 
             # Make all townies win
