@@ -29,13 +29,13 @@ class SetupData():
         newData.name = data.split("||")[1]
         return newData
 
-    def addRole(self, role:enums.Role, amount:int, changeToCustom:bool=True):
+    def addRole(self, role:str, amount:int, changeToCustom:bool=True):
         if (changeToCustom):
             self.type = enums.SetupDataType.Custom
         for _ in range(amount):
             self.roles.append(role)
 
-    def removeRole(self, role:enums.Role, amount:int, changeToCustom:bool=True):
+    def removeRole(self, role:str, amount:int, changeToCustom:bool=True):
         # 1: Role not in list
         # 2: amount higher than roles in list
         
@@ -68,9 +68,9 @@ class SetupData():
                 return (key.replace("~HS", ""), value)
         return
     
-    def isPresetHeadstart(name:str):
+    def isPresetHeadstart(self):
         for key in presetSetups.keys():
-            if (key == name):
+            if (key.replace("~HS", "") == self.name.replace("~HS", "")):
                 return key.startswith("~HS")
         return False
     
