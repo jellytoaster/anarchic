@@ -327,9 +327,9 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
             winner = 2 # 0 for ties
 
         if (winner == 1):
-            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xff6363), description=f"The Town has decided to lynch **{targetPlayer.memberObj.name}#{targetPlayer.memberObj.discriminator}** on a vote of **__{len(game.votedGuilty)}__** - **__{len(game.votedInnocent)}__**")
+            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xff6363), description=f"The Town has decided to lynch **{targetPlayer.memberObj.name}** on a vote of **__{len(game.votedGuilty)}__** - **__{len(game.votedInnocent)}__**")
         if (winner == 2):
-            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xa3ffc2), description=f"The Town has decided to pardon **{targetPlayer.memberObj.name}#{targetPlayer.memberObj.discriminator}** on a vote of **__{len(game.votedGuilty)}__** - **__{len(game.votedInnocent)}__**")
+            embed = disnake.Embed(title="**Trial Results**", colour=disnake.Colour(0xa3ffc2), description=f"The Town has decided to pardon **{targetPlayer.memberObj.name}** on a vote of **__{len(game.votedGuilty)}__** - **__{len(game.votedInnocent)}__**")
 
         embed = utils.createVotingResults(embed, game, game.votedGuilty, game.votedInnocent)
         
