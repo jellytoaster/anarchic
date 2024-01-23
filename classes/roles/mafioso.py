@@ -6,6 +6,7 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Mafioso("Mafioso", Faction.Mafia)
@@ -23,7 +24,7 @@ async def kill(targetPlayers:list, originPlayer:classes.player.Player, game):
 class Mafioso(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = True
+        self.investigationResults = investigationResults(True, "Your target is the cold blooded hitman of the mafia.")
         self.type = "killing"
         self.color = 0xd0021b
         self.order = 8

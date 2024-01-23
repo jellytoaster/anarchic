@@ -7,6 +7,7 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Headhunter("Headhunter", Faction.Neutral)
@@ -47,7 +48,7 @@ async def rest(targetPlayers:list, originPlayer:classes.player.Player, game):
 class Headhunter(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = False
+        self.investigationResults = investigationResults(False, "Your target sentences the condemned to their fate.")
         self.color = 0x334f64
         self.type = "evil"
         self.order = 10

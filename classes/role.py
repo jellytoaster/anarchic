@@ -1,4 +1,5 @@
 from classes.enums import Faction
+import classes.investigationResults
 
 class Role:
     
@@ -9,7 +10,7 @@ class Role:
         self.color = 0x000000
         self.faction = faction
         self.type = ""
-        self.suspiciousRole = False
+        self.investigationResults:classes.investigationResults.investigationResults = classes.investigationResults.investigationResults()
         self.promotionOrder = 0
         self.abilities:list = []
         self.roleEmbed = None

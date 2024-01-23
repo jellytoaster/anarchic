@@ -6,13 +6,14 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Cop("Cop", Faction.Town)
 
 async def interrogate(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
-        if (targetPlayer.isSuspicious):
+        if (targetPlayer.assignedRole.investigationResults.copSuspicious):
 
             embed = disnake.Embed(title="**Your target is sided with the Mafia!**", colour=disnake.Colour(0xd0021b), description=f"** **")
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/925794458136637561.webp?size=96&quality=lossless")
@@ -28,7 +29,7 @@ class Cop(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
 
         super().__init__(name, faction)
-        self.suspiciousRole = False
+        self.investigationResults = investigationResults(False, "Your target is the law enforcer of the town.")
         self.color = 0x7ed321
         self.type = "investigative"
         self.order = 9

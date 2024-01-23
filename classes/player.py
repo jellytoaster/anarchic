@@ -79,5 +79,6 @@ class Player():
             return False
         
     def whoVisitedMe(self):
+        """Who visited me! This returns the real results (not framer affected)"""
         return [i for i in self.game.playervar if self in i.nightTargettedPlayers]
 

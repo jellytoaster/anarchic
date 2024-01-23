@@ -6,6 +6,7 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Jester("Jester", Faction.Neutral)
@@ -21,7 +22,7 @@ async def roleBlock(targetPlayers:list, originPlayer:classes.player.Player, game
 class Jester(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = False
+        self.investigationResults = investigationResults(False, "Your target is a crazed lunatic waiting to be hung.")
         self.type = "evil"
         self.color = 0xf1cbe2
         self.order = 1

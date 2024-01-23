@@ -6,14 +6,14 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Lookout("Lookout", Faction.Town)
 
 async def look(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
-        visitedPlayers = targetPlayer.whoVisitedMe()
-
+        visitedPlayers = targetPlayer.assignedRole.investigationResults.lookoutVisitedBy
         visitedPlayers.remove(originPlayer)
 
         if (len(visitedPlayers)) == 0:
@@ -30,7 +30,7 @@ async def look(targetPlayers:list, originPlayer:classes.player.Player, game):
 class Lookout(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = False
+        self.investigationResults = investigationResults(False, "Your target is a sleepless nightwatcher.")
         self.color = 0x7ed321
         self.type = "investigative"
         self.order = 100

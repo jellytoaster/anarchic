@@ -5,6 +5,7 @@ import disnake
 import classes.ability
 import classes.player
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Consort("Consort", Faction.Mafia)
@@ -15,7 +16,7 @@ def roleblockplayer(targetPlayers:list, originPlayer:classes.player.Player, game
 class Consort(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = True
+        self.investigationResults = investigationResults(True, "Your target is a seductive dancer.")
         self.color = 0xd0021b
         self.promotionOrder = 9
         self.type = "support"

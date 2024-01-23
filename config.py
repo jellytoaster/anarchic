@@ -1,7 +1,7 @@
 import os
 
 PREFIX = ">"
-VERSION = "1.1.0"
+VERSION = "2.0.0"
 PLAYER_LIMIT = 15
 BETATOKEN = os.getenv("BETATOKEN")
 TOKEN = os.getenv("TOKEN")

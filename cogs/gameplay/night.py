@@ -2,6 +2,7 @@ import disnake
 import asyncio
 import cogs.gameplay.winConditions
 import cogs.gameplay.day
+import copy
 import classes.player
 from disnake.interactions import MessageInteraction
 import classes.game
@@ -80,9 +81,17 @@ async def sendTargetingEmbeds(game:classes.game.Game):
 
         for i in game.playervar:
             i.nightTargettedPlayers = []
+            i.assignedRole.investigationResults.lookoutVisitedBy = []
+            i.assignedRole.investigationResults.trackerTargetted = []
             asyncio.create_task(sendTargetingEmbed(i, game))
 
         await asyncio.sleep(33)
+
+        # First of all, put night actions into their investigation results
+        for i in game.playervar:
+            i:classes.player.Player
+            i.assignedRole.investigationResults.lookoutVisitedBy = copy.copy(i.whoVisitedMe())
+            i.assignedRole.investigationResults.trackerTargetted = copy.copy(i.nightTargettedPlayers)
 
         # Process night actions, 1 goes first and so on
         hierarchy = sorted(game.playervar, key=lambda x: x.assignedRole.order, reverse=True)

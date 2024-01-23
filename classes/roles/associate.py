@@ -6,6 +6,7 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Associate("Associate", Faction.Mafia)
@@ -13,7 +14,7 @@ def init():
 class Associate(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = True
+        self.investigationResults = investigationResults(True, "Your target is a loyal goon affiliated with the Mafia.")
         self.color = 0xd0021b
         self.promotionOrder = 10
         self.order = 0

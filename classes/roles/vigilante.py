@@ -6,6 +6,7 @@ import classes.ability
 import classes.player
 import classes.enums
 from classes.enums import Faction
+from  classes.investigationResults import investigationResults
 
 def init():
     Vigilante("Vigilante", Faction.Town)
@@ -29,7 +30,7 @@ def isUsable(game):
 class Vigilante(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.suspiciousRole = True
+        self.investigationResults = investigationResults(False, "Your target is willing to bend the law to enact justice.")
         self.color = 0xd0021b
         self.order = 8
         self.type = "killing"
