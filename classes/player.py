@@ -16,7 +16,6 @@ class Player():
     
     def __init__(self, member, game:Game) -> None:
         self.memberObj:disnake.Member = member
-        self.game = None
         self.id = member.id
         self.assignedRole:classes.role.Role = None
         self.dead = False
@@ -80,5 +79,5 @@ class Player():
         
     def whoVisitedMe(self):
         """Who visited me! This returns the real results (not framer affected)"""
-        return [i for i in self.game.playervar if self in i.nightTargettedPlayers]
+        return [i for i in self.assignedGame.playervar if self in i.nightTargettedPlayers]
 

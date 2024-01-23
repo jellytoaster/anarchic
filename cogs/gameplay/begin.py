@@ -62,7 +62,6 @@ def assignRoles(game:classes.game.Game):
                 finalSelection = selection
 
             newPlayer.assignedRole = copy.deepcopy(role.Role.toRole(finalSelection))
-            newPlayer.game = game
             roles.remove(selection)
 
         if (fufillsRoleCiteria()):
