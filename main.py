@@ -3,8 +3,6 @@ import time
 import os
 import importlib
 import config
-import cogs
-from classes.role import Role
 from classes.contraction import Contraction
 from cogs import party, setupManagement, admin, endGame, basic, help
 from disnake.ext import commands
@@ -47,12 +45,12 @@ Contraction.initContractions()
 
 # Create cogs (for slash commands)
 print("Loading cogs")
-bot.add_cog(cogs.party.PartyCog(bot))
-bot.add_cog(cogs.setupManagement.setupManagement(bot))
-bot.add_cog(cogs.admin.adminCommands(bot))
-bot.add_cog(cogs.endGame.endGame(bot))
-bot.add_cog(cogs.basic.basic(bot))
-bot.add_cog(cogs.help.HelpCog(bot))
+bot.add_cog(party.PartyCog(bot))
+bot.add_cog(setupManagement.setupManagement(bot))
+bot.add_cog(admin.adminCommands(bot))
+bot.add_cog(endGame.endGame(bot))
+bot.add_cog(basic.basic(bot))
+bot.add_cog(help.HelpCog(bot))
 
 
 print("Connecting to Discord")
