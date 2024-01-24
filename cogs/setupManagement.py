@@ -293,4 +293,4 @@ class setupManagement(commands.Cog):
     @setup_addRole.autocomplete("role")
     @setup_removeRole.autocomplete("role")
     async def autoCompleteRole(inter, input):
-        return [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if input.lower() in e.display_name.lower()]
+        return [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if input.lower() in e.display_name.lower() and e.showInSetup == True] 
