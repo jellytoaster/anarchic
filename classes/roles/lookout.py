@@ -17,7 +17,7 @@ async def look(targetPlayers:list, originPlayer:classes.player.Player, game):
         visitedPlayers.remove(originPlayer)
 
         if (len(visitedPlayers)) == 0:
-            await originPlayer.memberObj.send(embed=disnake.Embed(title=f"Nobody visited your target last night.", colour=disnake.Colour(0x7ed321)).set_thumbnail(url=originPlayer.memberObj.display_avatar.url).set_footer(text="Interesting", icon_url=originPlayer.memberObj.display_avatar.url))
+            await originPlayer.memberObj.send(embed=disnake.Embed(title=f"Nobody visited your target last night.", colour=disnake.Colour(0x7ed321)).set_thumbnail(url=originPlayer.memberObj.display_avatar.url).set_footer(text="Interesting.", icon_url=originPlayer.memberObj.display_avatar.url))
         else:
             if len(visitedPlayers) > 1:
                 title = ", ".join(visitedPlayers[:-1].memberObj.name) + " and " + visitedPlayers[-1].memberObj.name

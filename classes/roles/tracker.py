@@ -15,7 +15,7 @@ async def track(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
 
         if (len(targetPlayer.assignedRole.investigationResults.trackerTargetted) == 0):
-            embed = disnake.Embed(title=f"Your target did not visit anyone last night.", colour=disnake.Colour(0x7ed321)).set_thumbnail(url=targetPlayer.memberObj.display_avatar.url).set_footer(text="Interesting", icon_url=originPlayer.memberObj.display_avatar.url)
+            embed = disnake.Embed(title=f"Your target did not visit anyone last night.", colour=disnake.Colour(0x7ed321)).set_thumbnail(url=targetPlayer.memberObj.display_avatar.url).set_footer(text="Interesting.", icon_url=originPlayer.memberObj.display_avatar.url)
             await originPlayer.memberObj.send(embed=embed)
             return
 
