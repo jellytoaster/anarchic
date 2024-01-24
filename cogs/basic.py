@@ -2,6 +2,7 @@ import disnake
 import config
 import classes.enums
 import classes.role
+import classes.contraction
 import string
 from disnake.ext import commands
 
@@ -83,6 +84,36 @@ class basic(commands.Cog):
 
         view = RoleView()
         await inter.response.send_message(embed=embed, view=view)
+
+    @commands.slash_command(name="subalignments", description="Learn about subalignments and what roles fall in their category", options=[disnake.Option("faction", "What faction to use. Town if none is chosen.", disnake.OptionType.string, False, choices=["Town", "Mafia", "Neutral"])])
+    async def subalignments(inter:disnake.ApplicationCommandInteraction, faction="town"):
+        faction = faction.lower()
+        factionColors = {"town" : 0x7ed321, "all" : 0x7ed321, "mafia": 0xd0021b, "neutral":0x9b9b9b}
+
+        embed = disnake.Embed(title=f"Anarchic Subalignments | {string.capwords(faction)}", color=factionColors[faction], description=f"Here is a list of **{string.capwords(faction)}** roles in Anarchic")
+        
+        organizedRoles = {}
+        for role in classes.role.Role.allRoles:
+            myType = f"{role.faction.name}{role.type}"
+            if (not (myType in organizedRoles)):
+                organizedRoles[myType] = []
+            organizedRoles[myType].append(role)
+
+        def remove(str, toRemove):
+            return str.replace(toRemove, "")
+
+        for key, value in organizedRoles.items():
+            if (key.lower().startswith(faction)):
+                roles = []
+                for i in value:
+                    roles.append(f"{i.emoji} **{i.name}**")
+                val = "\n".join(roles)
+
+                name = f"{string.capwords(faction)} {string.capwords(key.lower().replace(faction, ''))}"
+                embed.add_field(f"`{name} {classes.contraction.Contraction.getContraction(faction, key.lower().replace(faction, '')).emoji}`", val, inline=False)
+
+
+        await inter.response.send_message(embed=embed) 
 
     @commands.slash_command(name="changelog", description="Learn about the latest features")
     async def changelog(inter:disnake.ApplicationCommandInteraction):
