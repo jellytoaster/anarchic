@@ -10,12 +10,14 @@ class Role:
         self.color = 0x000000
         self.faction = faction
         self.type = ""
-        self.investigationResults:classes.investigationResults.investigationResults = classes.investigationResults.investigationResults()
+        self.investigationResults = None
         self.promotionOrder = 0
         self.abilities:list = []
         self.roleEmbed = None
         self.order = 0 # 0 is first, higher numbers have their role action processed later
+        
         Role.allRoles.append(self)
+        return self
 
     def toRole(name:str):
         for i in Role.allRoles:

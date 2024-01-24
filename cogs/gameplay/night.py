@@ -43,6 +43,7 @@ async def nightCycle(game:classes.game.Game):
             if (i.assignedRole.faction == classes.enums.Faction.Mafia):
                 mafiaPlayers.append(i)
 
+        # Decending order so larger vals execute first
         promotedPlayer:classes.player.Player = sorted(mafiaPlayers, key=lambda x: x.assignedRole.promotionOrder, reverse=True)[0]
         promotedPlayer.assignedRole = classes.role.Role.toRole("Mafioso")
 

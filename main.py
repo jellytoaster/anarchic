@@ -37,6 +37,8 @@ for file in os.listdir("classes/roles"):
         module = importlib.import_module("classes.roles." + module)
         module.init()
     except Exception as e:
+        if (config.TEST_MODE):
+            raise e
         print(f"Could not initialize role in {path}!: {e}")
 
 

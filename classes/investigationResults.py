@@ -1,5 +1,5 @@
 class investigationResults():
-    def __init__(self, cop:bool, consig:str) -> None:
+    def __init__(self, cop:bool, consig:str):
         self.copSuspicious = cop
         self.consigliereFlavorText = consig
 
