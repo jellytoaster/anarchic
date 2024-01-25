@@ -1,5 +1,4 @@
 import copy
-import classes.player
 
 class investigationResults():
     def __init__(self, cop:bool, consig:str):
@@ -12,7 +11,8 @@ class investigationResults():
         self.lookoutVisitedBy = []
         self.trackerTargetted = []
 
-    def reset(self, player:classes.player.Player):
+    def reset(self, player):
+        """Resets an investigation result to its real values. Useful for unframing somebody."""
         self.copSuspicious = self.realCopSuspicious
 
         self.lookoutVisitedBy = player.whoVisitedMe()
