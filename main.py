@@ -3,6 +3,7 @@ import time
 import os
 import importlib
 import config
+import classes.changelog
 from classes.contraction import Contraction
 from cogs import party, setupManagement, admin, endGame, basic, help
 from disnake.ext import commands
@@ -40,8 +41,9 @@ for file in os.listdir("classes/roles"):
         print(f"Could not initialize role in {path}!: {e}")
 
 
-# Init contractions
+# Init contractions & changelogs
 Contraction.initContractions()
+classes.changelog.Changelog.initChangelogs()
 
 # Create cogs (for slash commands)
 print("Loading cogs")
