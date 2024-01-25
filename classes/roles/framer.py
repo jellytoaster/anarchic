@@ -13,13 +13,23 @@ def init():
 
 async def frame(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
-        return
+        targetPlayer.assignedRole.investigationResults.copSuspicious = True
+        
+        targetPlayer.assignedRole.investigationResults.trackerTargetted = [game.mafNightKill]
+
+        for i in game.playervar:
+            try:
+                i.assignedRole.investigationResults.lookoutVisitedBy.remove(targetPlayer)
+            except:
+                 continue
+        
+        game.mafNightKill.assignedRole.investigationResults.lookoutVisitedBy = [targetPlayer]
 
 class Framer(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
 
         super().__init__(name, faction)
-        self.investigationResults = investigationResults(False, "Your target is the law enforcer of the town.")
+        self.investigationResults = investigationResults(True, "Your target is the law enforcer of the town.")
         self.color = 0xd0021b
         self.type = "deception"
         self.order = 1000

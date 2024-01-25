@@ -32,6 +32,7 @@ class Game():
         self.votedGuilty = []
         self.headStart= False
         self.currentRound = 0
+        self.mafNightKill = []
 
     def reset(self):
         self.playervar:list(player.Player) = []
@@ -49,6 +50,7 @@ class Game():
         self.votedInnocent = []
         self.votedGuilty = []
         self.currentRound = 0
+        self.mafNightKill = []
 
 
     def findGuildGame(id:int):

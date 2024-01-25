@@ -65,10 +65,13 @@ async def sendTargetingEmbeds(game:classes.game.Game):
     try:
         import classes.player
 
+        game.mafNightKill.clear()
+
         for i in game.playervar:
             i.defended = None
             i.isRoleBlocked = False
             i.isVoteBlocked = False
+            i.assignedRole.investigationResults.reset(i)
 
 
         # Perform early passives first
@@ -93,6 +96,10 @@ async def sendTargetingEmbeds(game:classes.game.Game):
             i:classes.player.Player
             i.assignedRole.investigationResults.lookoutVisitedBy = copy.copy(i.whoVisitedMe())
             i.assignedRole.investigationResults.trackerTargetted = copy.copy(i.nightTargettedPlayers)
+
+        # Second of all, calculate mafia night kill
+        for i in classes.player.Player.getPlayersWithRole("mafioso", game):
+            game.mafNightKill.append(i.nightTargettedPlayers[0])
 
         # Process night actions, 1 goes first and so on
         hierarchy = sorted(game.playervar, key=lambda x: x.assignedRole.order, reverse=True)
