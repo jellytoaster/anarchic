@@ -23,10 +23,11 @@ class Contraction():
         Contraction("town", "vanilla", "Town Vanilla", "🏠", False)        
 
         # Mafia Roles
-        Contraction("mafia", "", "Random Mafia", "🏠")
+        Contraction("mafia", "", "Random Mafia", "🌹")
         Contraction("mafia", "killing", "Mafia Killing", "🔪")
         Contraction("mafia", "support", "Mafia Support", "💖")     
-        Contraction("mafia", "vanilla", "Mafia Vanilla", "🏠", False)       
+        Contraction("mafia", "desception", "Mafia Deception", "🎞️")     
+        Contraction("mafia", "vanilla", "Mafia Vanilla", "🌹", False)       
 
         # Neutral Roles
         Contraction("neutral", "", "Random Neutral", "🤷‍♂️")
