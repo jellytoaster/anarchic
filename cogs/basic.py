@@ -101,8 +101,7 @@ class basic(commands.Cog):
                 val = "\n".join(roles)
 
                 name = f"{string.capwords(faction)} {string.capwords(key.lower().replace(faction, ''))}"
-                names = name.split(" ")
-                embed.add_field(f"`{name} {classes.contraction.Contraction.getContraction(names[0], names[1]).emoji}`", val, inline=False)
+                embed.add_field(f"`{name} {classes.contraction.Contraction.getContraction(faction, key.lower().replace(faction, '')).emoji}`", val, inline=False)
 
 
         await inter.response.send_message(embed=embed) 
@@ -158,6 +157,4 @@ class basic(commands.Cog):
 
     @role.autocomplete("name")
     async def autoCompleteRole(inter, input):
-        if (input == ""):
-            return [string.capwords(e.name) for e in classes.role.Role.allRoles]
         return [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()]
