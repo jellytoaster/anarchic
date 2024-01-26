@@ -22,7 +22,7 @@ class Consigliere(role.Role):
 
         super().__init__(name, faction)
         self.investigationResults = investigationResults(True, "Your target is the law enforcer of the town.")
-        self.color = 0x7ed321
+        self.color = 0xd0021b
         self.type = "support"
         self.promotionOrder = 0
         self.order = -5
