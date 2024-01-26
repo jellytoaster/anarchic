@@ -13,7 +13,7 @@ def init():
 
 async def check(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayer:classes.player.Player = targetPlayers[0]
-    visitedPlayers = targetPlayer.assignedRole.investigationResults.lookoutVisitedBy
+    visitedPlayers = targetPlayer.whoVisitedMe()
     visitedPlayers.remove(originPlayer)
 
     if (len(visitedPlayers)) == 0:
@@ -27,12 +27,12 @@ async def check(targetPlayers:list, originPlayer:classes.player.Player, game):
         embed = disnake.Embed(title=f"Your target was visited by {title} last night!", colour=disnake.Colour(0xd0021b)).set_thumbnail(url=visitedPlayers[0].memberObj.display_avatar.url).set_footer(text="What were they doing?", icon_url=originPlayer.memberObj.display_avatar.url)
         await originPlayer.memberObj.send(embed=embed)
     
-    if (len(targetPlayer.assignedRole.investigationResults.trackerTargetted) == 0):
+    if (len(targetPlayer.nightTargettedPlayers) == 0):
         embed = disnake.Embed(title=f"Your target did not visit anyone last night.", colour=disnake.Colour(0xd0021b)).set_thumbnail(url=targetPlayer.memberObj.display_avatar.url).set_footer(text="Interesting.", icon_url=originPlayer.memberObj.display_avatar.url)
         await originPlayer.memberObj.send(embed=embed)
         return
 
-    visitedPlayers = targetPlayer.assignedRole.investigationResults.trackerTargetted
+    visitedPlayers = targetPlayer.nightTargettedPlayers
 
     if len(visitedPlayers) > 1:
         title = ", ".join(visitedPlayers[:-1].memberObj.name) + " and " + visitedPlayers[-1].memberObj.name
@@ -45,7 +45,7 @@ async def check(targetPlayers:list, originPlayer:classes.player.Player, game):
 class Recon(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
-        self.investigationResults = investigationResults(True, "Your target is a sleepless nightwatcher.")
+        self.investigationResults = investigationResults(True, "Your target lurks in shadows.")
         self.color = 0xd0021b
         self.type = "support"
         self.promotionOrder = -1
