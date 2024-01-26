@@ -13,7 +13,7 @@ class Contraction():
 
     def getContraction(faction, type):
         return [e for e in Contraction.allContractions if e.faction.lower() == faction.lower() and e.type.lower() == type.lower()][0]
-
+    
     def initContractions():
         # Town Roles
         Contraction("town", "", "Random Town", "🏠")
@@ -25,8 +25,8 @@ class Contraction():
         # Mafia Roles
         Contraction("mafia", "", "Random Mafia", "🌹")
         Contraction("mafia", "killing", "Mafia Killing", "🔪")
-        Contraction("mafia", "support", "Mafia Support", "💖")     
-        Contraction("mafia", "desception", "Mafia Deception", "🎞️")     
+        Contraction("mafia", "support", "Mafia Support", "🥀")     
+        Contraction("mafia", "deception", "Mafia Deception", "🎞️")     
         Contraction("mafia", "vanilla", "Mafia Vanilla", "🌹", False)       
 
         # Neutral Roles
