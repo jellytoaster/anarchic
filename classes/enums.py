@@ -21,11 +21,11 @@ class DeathReason(Enum):
     Headhunter = 6
 
 class AbilityType(Enum):
-    Passive = 0
-    Night = 1
+    Passive = "passive"
+    Night = "night"
     Dawn = 2
     Dusk = 3
-    PassiveDawn = 4
-    PassiveDusk = 5
-    PassiveEarly = 5
-    DayOne = 7
+    PassiveDawn = "passive"
+    PassiveDusk = "passive"
+    PassiveEarly = "passive"
+    DayOne = "passive"
