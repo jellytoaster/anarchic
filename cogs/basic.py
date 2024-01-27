@@ -155,6 +155,20 @@ class basic(commands.Cog):
 
         await inter.response.send_message(embed=embed)
 
+    @commands.slash_command(name="frames", description="Display the investigation results for player framing")
+    async def frames(inter):
+        embed = disnake.Embed(title="Investigation results for frames", colour=disnake.Colour(0xd0021b), description=f"As of **{config.VERSION}**, here are the results **\🔎 Town Investigative** roles will recieve if their target is <:frameicon2:890365634913902602> **Framed**.")
+
+        embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/890365634913902602.webp")
+        embed.set_footer(text="Try not to get framed!", icon_url=inter.author.display_avatar.url)
+
+        embed.add_field(name="<:copicon2:889672912905322516> __Cop__", value="Your target is sided with the <:mafia:1007768566789050378> **Mafia**!", inline=False)
+        embed.add_field(name="<:trackicon:922885543812005949> __Tracker__", value="Your target visited the Mafia night kill", inline=False)
+        embed.add_field(name="<:loicon2:889673190392078356> __Lookout__", value="The Mafia night kill will be visited by the framed player", inline=False)
+        
+        await inter.response.send_message(embed=embed)
+
+    # Option autocompletes
     @role.autocomplete("name")
     async def autoCompleteRole(inter, input):
         return [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()]
