@@ -16,7 +16,7 @@ class Associate(role.Role):
         super().__init__(name, faction)
         self.investigationResults = investigationResults(True, "Your target is a loyal goon affiliated with the Mafia.")
         self.color = 0xd0021b
-        self.promotionOrder = -20
+        self.promotionOrder = 100
         self.order = 0
         self.type = "vanilla"
         self.emoji = "<:assoicon:1006333104920735787>"

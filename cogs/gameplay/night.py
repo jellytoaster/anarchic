@@ -44,7 +44,7 @@ async def nightCycle(game:classes.game.Game):
                 mafiaPlayers.append(i)
 
         # Decending order so larger vals execute first
-        promotedPlayer:classes.player.Player = sorted(mafiaPlayers, key=lambda x: x.assignedRole.promotionOrder, reverse=True)[0]
+        promotedPlayer:classes.player.Player = sorted(mafiaPlayers, key=lambda x: x.assignedRole.promotionOrder)[0]
         promotedPlayer.assignedRole = classes.role.Role.toRole("Mafioso")
 
         embed = disnake.Embed(title=f"**{promotedPlayer.memberObj.name} has been promoted to a Mafioso!**", colour=0xd0021b)

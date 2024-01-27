@@ -18,7 +18,7 @@ class Consort(role.Role):
         super().__init__(name, faction)
         self.investigationResults = investigationResults(True, "Your target is a seductive dancer.")
         self.color = 0xd0021b
-        self.promotionOrder = 9
+        self.promotionOrder = 3
         self.type = "support"
         self.order = 0
         self.emoji = "<:consicon2:890336628269281350>"
