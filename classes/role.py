@@ -50,7 +50,7 @@ class Role:
         return embed
     
     def buildEmbedSimple(self):
-        embed = disnake.Embed(title=self.name, description=self.constants["shortDescription"], color=self.color)
+        embed = disnake.Embed(title="The " + self.name, description=self.constants["shortDescription"], color=self.color)
         
         emojis = {"passive": "<:passive:936343832696606800>", "night": "<:moon:934556372421451776>"}
         abilities = ""
