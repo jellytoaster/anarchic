@@ -15,7 +15,11 @@ async def examine(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
         flavorText = targetPlayer.assignedRole.investigationResults.consigliereFlavorText
 
-        await originPlayer.send(f"{flavorText} They must be a {targetPlayer.assignedRole.emoji} **{targetPlayer.assignedRole.name}**")
+        embed = disnake.Embed(title=f"**{flavorText}**", description=f"They must be a {targetPlayer.assignedRole.emoji} **{targetPlayer.assignedRole.name}**")
+        embed.set_footer(text="That's interesting", icon_url=originPlayer.memberObj.avatar.url)
+        embed.set_thumbnail(f"https://cdn.discordapp.com/emojis/{targetPlayer.assignedRole.emoji.split(':')[2].replace('>', '')}.webp?format=webp&width=76&height=64")
+
+        await originPlayer.memberObj.send(embed=embed)
 
 class Consigliere(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
