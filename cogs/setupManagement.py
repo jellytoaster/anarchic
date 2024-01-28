@@ -257,7 +257,7 @@ class setupManagement(commands.Cog):
                         await confirminteraction.response.edit_message(embed=embed, view=self)
 
 
-                    @disnake.ui.button(label="No", style=disnake.ButtonStyle.red, emoji="❌")
+                    @disnake.ui.button(label="No", style=disnake.ButtonStyle.red, emoji="⛔")
                     async def nah(self, button, confirminteraction):
                         if (len(game.players) == 0):
                             await confirminteraction.response.send_message("There is no game yet. Use </join:1081377829637324800> to join!", ephemeral=True)

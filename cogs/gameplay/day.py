@@ -246,7 +246,7 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
             def __init__(self):
                 super().__init__()
 
-            @disnake.ui.button(label="Guilty ✅", style=disnake.ButtonStyle.green)
+            @disnake.ui.button(label="Guilty", style=disnake.ButtonStyle.green, emoji="<:lynch:1010226047456915547>")
             async def guilty(self, button, inter):
                 if inter.author not in game.players:
                     await inter.response.send_message("You're not even in the game :skull:", ephemeral=True)
@@ -270,7 +270,7 @@ async def enterAccusation(game:classes.game.Game, targetPlayer:classes.player.Pl
                 await inter.response.send_message(content=f"You have __**Guiltied**__ <:vote:1009960345428820059> {targetPlayer.memberObj.name} ", ephemeral=True)
                 await game.channelTownSquare.send(f"**__{selfPlayer.memberObj.name}__ <:vote:1009960345428820059>** has voted")
 
-            @disnake.ui.button(label="Pardon ❌", style=disnake.ButtonStyle.red)
+            @disnake.ui.button(label="Pardon", style=disnake.ButtonStyle.red, emoji="<:inno:873636640227205160>")
             async def inno(self, button, inter):
                 if inter.author not in game.players:
                     await inter.response.send_message("You're not even in the game :skull:", ephemeral=True)
