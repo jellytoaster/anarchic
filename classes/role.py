@@ -35,12 +35,12 @@ class Role:
         emojis = {"passive": "<:passive:936343832696606800>", "night": "<:moon:934556372421451776>"}
         abilities = ""
         for i in self.abilities:
-            i
             if i.visible:
                 charge = f'{"- " + utils.chargeCountSimple(i.charges) if i.type.value != "passive" else ""}'
                 abilities += f"{emojis[i.type.value]} **{i.name} ({string.capwords(i.type.value)}) {charge}**\n{i.description}\n\n"
 
-        embed.add_field("__Abilites__ 🌟", abilities, inline=False)
+        if (abilities != ""):
+            embed.add_field("__Abilities__ 🌟", abilities, inline=False)
         embed.add_field("__Win Condition__ 🏆", f"*{self.constants['winCon']}*", inline=False)
 
         embed.set_footer(text=f"{string.capwords(self.faction.value)} {string.capwords(self.type)} {Contraction.getContraction(self.faction.value.lower(), self.type.lower()).emoji}")
@@ -55,12 +55,12 @@ class Role:
         emojis = {"passive": "<:passive:936343832696606800>", "night": "<:moon:934556372421451776>"}
         abilities = ""
         for i in self.abilities:
-            i
             if i.visible:
                 charge = f'{"- " + utils.chargeCountSimple(i.charges) if i.type.value != "passive" else ""}'
                 abilities += f"{emojis[i.type.value]} **{i.name} ({string.capwords(i.type.value)}) {charge}**\n{i.description}\n\n"
 
-        embed.add_field("__Abilites__ 🌟", abilities, inline=False)
+        if (abilities != ""):
+            embed.add_field("__Abilities__ 🌟", abilities, inline=False)
         embed.add_field("__Win Condition__ 🏆", f"*{self.constants['winCon']}*", inline=False)
 
         embed.set_footer(text=f"{string.capwords(self.faction.value)} {string.capwords(self.type)} {Contraction.getContraction(self.faction.value.lower(), self.type.lower()).emoji}")
