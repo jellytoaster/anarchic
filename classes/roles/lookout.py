@@ -35,8 +35,8 @@ class Lookout(role.Role):
         self.type = "investigative"
         self.order = 100
         self.emoji = "<:loicon2:889673190392078356>"
-        self.roleEmbed = disnake.Embed(title="**Your role is Lookout**", colour=disnake.Colour(0x7ed321), description="A skilled observer who keeps an eye on the evils").set_thumbnail(url="https://cdn.discordapp.com/emojis/889673190392078356.webp?size=44&quality=lossless").set_footer(text="Town Investigative 🔎").add_field(name="**Atk ⚔️:**", value="None", inline=True).add_field(name="**Res 🛡️:**", value="None", inline=True).add_field(name="**Faction 📌:**", value="**Town <:townicon2:896431548717473812>**", inline=False).add_field(name="**Type 🔅:**", value="**Information \🔎**", inline=False).add_field(name="**Abilities \🔎:**", value="**<:moon:934556372421451776> Overlook | Unlimited charges**", inline=False).add_field(name="**Attributes 🌟**", value="**<:loicon2:889673190392078356> Overlook -** __Overlook__ target player. You will learn who visits your target.", inline=False).add_field(name="**Win Condition 🏆:**", value="Eliminate all criminals who may try to harm the **Town <:townicon2:896431548717473812>**", inline=False).add_field(name="**Investigation Results \🔎:**", value="**Cop <:copicon2:889672912905322516>:** Your target seems **Innocent :inno:**\n**Consigliere <:consigicon2:896154845130666084>:** Your target is a sleepless nightwatcher. They must be a **Lookout <:loicon2:889673190392078356>**", inline=False)
         self.abilities = [classes.ability.Ability(look, utils.notMeAndNotDead, -1, "Overlook", "__Overlook__ target player. You will learn who visits your target.", "🔦", "watch")]
+        self.constants = {"shortDescription": 'A rogue enforcer with an eye for justice', "winCon" : "Eliminate all criminals who may try to harm the **Town <:town:1007768656341651547>**"}
 
 
 
