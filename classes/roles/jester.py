@@ -27,5 +27,5 @@ class Jester(role.Role):
         self.color = 0xf1cbe2
         self.order = 1
         self.emoji = "<:jesticon2:889968373612560394>"
-        self.abilities = [classes.ability.Ability(kill, utils.playersWhoVotedGuilty, 1, "Haunt", "Haunt a player so they die.", "<:jesticon2:889968373612560394>", "haunt", utils.jesterDeathCheck, classes.enums.AbilityType.Night),classes.ability.Ability(roleBlock, utils.playersWhoVotedGuilty, -1, "jester roleblock", "roleblock guiltiers", "💀", "roleblock", utils.jesterDeathCheck, classes.enums.AbilityType.PassiveEarly)]
+        self.abilities = [classes.ability.Ability(kill, utils.playersWhoVotedGuilty, 1, "Haunt", "Haunt a player so they die.", "<:jesticon2:889968373612560394>", "haunt", utils.jesterDeathCheck, classes.enums.AbilityType.Night),classes.ability.Ability(roleBlock, utils.playersWhoVotedGuilty, -1, "jester roleblock", "roleblock guiltiers", "💀", "roleblock", utils.jesterDeathCheck, classes.enums.AbilityType.PassiveEarly, False)]
         self.constants = {"shortDescription": 'A crazed lunatic who wants to be publicly executed', "winCon" : "Get yourself **Lynched <:jesticon2:889968373612560394>**"}

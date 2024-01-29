@@ -23,20 +23,13 @@ class Player():
         self.defended = None
         self.isRoleBlocked = False
         self.isVoteBlocked = False
-        self.isSuspicious = False
         self.nightTargettedPlayers = []
         self.wins = False
         self.deathRound = 0
         self.assignedGame = game
         
         self.externalRoleData = {}
-
-
         game.playervar.append(self)
-
-    def initPlayerVars(game:Game):
-        for i in game.playervar:
-            i.isSuspicious = i.assignedRole.suspiciousRole
 
     def get(id:int, game:Game):
         return [i for i in game.playervar if i.id == id][0]

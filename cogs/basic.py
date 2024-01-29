@@ -17,7 +17,7 @@ class basic(commands.Cog):
             await inter.response.send_message("That's not a role!", ephemeral=True)
             return
 
-        await inter.response.send_message(embed=classes.role.Role.toRole(name).roleEmbed)
+        await inter.response.send_message(embed=classes.role.Role.toRole(name).buildEmbedSimple())
 
     @commands.slash_command(name="roles", description="Get a description of every role in Anarchic")
     async def roles(self, inter: disnake.ApplicationCommandInteraction):

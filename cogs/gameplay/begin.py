@@ -1,5 +1,6 @@
 import disnake
 import classes.errorhandler
+import config
 import random
 import utils
 import classes.game
@@ -16,25 +17,14 @@ import classes.enums
 import classes.role
 
 def assignRoles(game:classes.game.Game):
-    def fufillsRoleCiteria():
-        numPlayers = len(game.players)
-        numMafiasRequired = 0
-        numMafias = len(player.Player.getPlayersWithFactions(classes.enums.Faction.Mafia, game))
+    cycle = 0
 
-        #calculate mafia roles required
-        if numPlayers <= 6:
-            numMafiasRequired = 1
-        elif 7 <= numPlayers <= 9:
-            numMafiasRequired = 2
-        else:
-            numMafiasRequired = 3
-
-        return numMafias == numMafiasRequired
+    for i in game.players:
+        player.Player(i, game)
 
     while True:
         roles = copy.deepcopy(game.setupData.roles)
-        for i in game.players:
-            newPlayer = player.Player(i, game)
+        for i in game.playervar:
 
             selection:str = random.choice(roles)
 
@@ -43,33 +33,56 @@ def assignRoles(game:classes.game.Game):
                     # Just any role that follows the faction
                     # Pick a role that fits the faction
                     randomList = []
-                    for i in classes.role.Role.allRoles:
-                        i:classes.role.Role
-                        if (selection.split()[1].lower() == i.faction.value):
-                            randomList.append(i.name)
+                    for x in classes.role.Role.allRoles:
+                        x:classes.role.Role
+                        if (selection.split()[1].lower() == x.faction.value):
+                            randomList.append(x.name)
 
                     finalSelection = random.choice(randomList)
                 else:
                     # Category, e.g Mafia Killing <-- killing role and is mafia
                     randomList = []
-                    for i in classes.role.Role.allRoles:
-                        i:classes.role.Role
-                        if (selection.split()[0].lower() == i.faction.value.lower() and selection.split()[1].lower() == i.type.lower()):
-                            randomList.append(i.name)
+                    for x in classes.role.Role.allRoles:
+                        x:classes.role.Role
+                        if (selection.split()[0].lower() == x.faction.value.lower() and selection.split()[1].lower() == x.type.lower()):
+                            randomList.append(x.name)
 
                     finalSelection = random.choice(randomList)
             else:
                 finalSelection = selection
 
-            newPlayer.assignedRole = copy.deepcopy(role.Role.toRole(finalSelection))
+            i.assignedRole = copy.deepcopy(role.Role.toRole(finalSelection))
             roles.remove(selection)
 
-        if (fufillsRoleCiteria()):
+        output = fufillsRoleCiteria(cycle, game)
+        if (output[0]):
             break
-       
+
+        cycle = output[1]
+    
+def fufillsRoleCiteria(cycle, game):
+    if (cycle == 100):
+        return [True, 0]
+
+    numPlayers = len(game.players)
+    numMafiasRequired = 0
+    numMafias = len(player.Player.getPlayersWithFactions(classes.enums.Faction.Mafia, game))
+
+    #calculate mafia roles required
+    if numPlayers <= 6:
+        numMafiasRequired = 1
+    elif 7 <= numPlayers <= 9:
+        numMafiasRequired = 2
+    else:
+        numMafiasRequired = 3
+
+    newCycle = cycle + 1
+
+    return [numMafias == numMafiasRequired, newCycle]
+
 async def sendRoles(game:classes.game.Game):
     for i in game.players:
-        await i.send(embed=player.Player.get(i.id, game).assignedRole.roleEmbed)
+        await i.send(embed=player.Player.get(i.id, game).assignedRole.buildEmbed())
 
 
 async def genChannels(game:classes.game.Game):
@@ -142,7 +155,6 @@ async def prep(game:classes.game.Game):
             else:
                 game.headStart = False
         await sendRoles(game)
-        player.Player.initPlayerVars(game)
     except Exception as e:
         await classes.errorhandler.handle(game.channelTownSquare, e)
         await utils.finishGame(game)
@@ -159,7 +171,6 @@ async def start(game:classes.game.Game):
             await game.channelMafia.set_permissions(i.memberObj, read_messages=True, send_messages=True, read_message_history=True)
         else:
             await game.channelMafia.set_permissions(i.memberObj, read_messages=False, send_messages=False, read_message_history=False)
-    
 
     embed:disnake.Embed = disnake.Embed(title="**__Your Mafia Team this game__ <:mafia:1007768566789050378>**", colour=disnake.Colour(0xd0021b))
 
