@@ -11,7 +11,7 @@ from  classes.investigationResults import investigationResults
 def init():
     Recon("Recon", Faction.Mafia)
 
-async def check(targetPlayers:list, originPlayer:classes.player.Player, game):
+async def stakeout(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayer:classes.player.Player = targetPlayers[0]
     visitedPlayers = targetPlayer.whoVisitedMe()
     visitedPlayers.remove(originPlayer)
@@ -54,7 +54,7 @@ class Recon(role.Role):
         self.promotionOrder = 4
         self.order = 0
         self.emoji = "<:recon:1200834864845438977>"
-        self.abilities = [classes.ability.Ability(doNothing, utils.notMeAndNotDead, -1, "Shadow Syndicate", " You have access to Mafia night meeting. If there is no living <:maficon:891739940055052328>**Mafioso**, you have the __fourth__ priority to become the <:maficon:891739940055052328> **Mafioso**", type=classes.enums.AbilityType.Passive), classes.ability.Ability(check, utils.notMafiaAndNotDead, -1, "Stakeout", "__Stake out__ target player. You will learn who your target visits, and who visits your target.", "🔦", "watch")]
+        self.abilities = [classes.ability.Ability(doNothing, utils.notMeAndNotDead, -1, "Shadow Syndicate", " You have access to Mafia night meeting. If there is no living <:maficon:891739940055052328>**Mafioso**, you have the __fourth__ priority to become the <:maficon:891739940055052328> **Mafioso**", type=classes.enums.AbilityType.Passive), classes.ability.Ability(stakeout, utils.notMafiaAndNotDead, -1, "Stakeout", "__Stake out__ target player. You will learn who your target visits, and who visits your target.", "🔭", "watch over")]
         self.constants = {"shortDescription": 'A counterintelligence agent, specialized in the gathering reconnaissance.', "winCon" : "You win when all members of the **Town** <:townicon2:896431548717473812> have been defeated."}
 
 
