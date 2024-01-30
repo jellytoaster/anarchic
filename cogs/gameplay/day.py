@@ -29,7 +29,7 @@ async def dayCycle(game:classes.game.Game):
             for i in game.playervar:
                 await i.kill(classes.enums.DeathReason.Plague, game, True)
 
-        await utils.modifySendPermissions(game.channelMafia, game, dead=False,alive=False)
+        await utils.mafiaModifySend(game.channelMafia, game, False)
 
         embed = disnake.Embed(title=f"It Is Day {game.dayNum} ☀️", color=disnake.Colour((0x7ed321)))
         

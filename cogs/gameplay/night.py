@@ -16,7 +16,7 @@ async def nightCycle(game:classes.game.Game):
     if (game.finished):
         return
     
-    await utils.modifySendPermissions(game.channelMafia, game, dead=False,alive=True)
+    await utils.mafiaModifySend(game.channelMafia, game, True)
 
     embed = disnake.Embed(title=f"**It is now Night {str(game.dayNum)} <:moon:934556372421451776>**", colour=disnake.Colour(0x1f0050))
 
@@ -185,12 +185,12 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
                 await interaction.response.send_message(embed=embed)
                 selfPlayer.nightTargettedPlayers.clear()
             else:
-                targettedPlayer:classes.player.Player = classes.player.Player.get(int(self.values[0]), game)
+                targettedPlayer:classes.player.Player = classes.player.Player.get(int(self.values[playerSelectedAbility]), game)
 
                 selfPlayer.nightTargettedPlayers.clear()
                 selfPlayer.nightTargettedPlayers.append(targettedPlayer)
 
-                embed = disnake.Embed(title=f"**You decide to {selfPlayer.assignedRole.abilities[0].flavorText} {targettedPlayer.memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
+                embed = disnake.Embed(title=f"**You decide to {selfPlayer.assignedRole.abilities[playerSelectedAbility].flavorText} {targettedPlayer.memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
 
                 embed.set_thumbnail(url=targettedPlayer.memberObj.display_avatar.url)
                 embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=interaction.author.display_avatar.url)
@@ -221,7 +221,7 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
         embed.set_footer(text="You can't change your decision anymore", icon_url=i.memberObj.display_avatar.url)
         await i.memberObj.send(embed=embed)
     else:    
-        embed = disnake.Embed(title=f"**Your final decision is to {i.assignedRole.abilities[0].flavorText} {i.nightTargettedPlayers[0].memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
+        embed = disnake.Embed(title=f"**Your final decision is to {i.assignedRole.abilities[playerSelectedAbility].flavorText} {i.nightTargettedPlayers[0].memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
 
         embed.set_thumbnail(url=i.nightTargettedPlayers[0].memberObj.display_avatar.url)
         embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=i.memberObj.display_avatar.url)
