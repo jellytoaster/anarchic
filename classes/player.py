@@ -27,6 +27,8 @@ class Player():
         self.wins = False
         self.deathRound = 0
         self.assignedGame = game
+        self.playerSelectedAbility = -1
+        self.votingPower = 1
         
         self.externalRoleData = {}
         game.playervar.append(self)
@@ -35,6 +37,7 @@ class Player():
         return [i for i in game.playervar if i.id == id][0]
 
     def getPlayersWithRole(roleName:str, game:Game):
+        """Case sensitive!"""
         return [i for i in game.playervar if i.assignedRole.name == roleName]
     
     def getPlayersWithFactions(faction:classes.enums.Faction, game:Game):

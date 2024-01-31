@@ -101,7 +101,7 @@ async def votingCycle(game:classes.game.Game):
         statusMsg = None
         votingData = {}
         for i in game.playervar:
-            votingData[i.memberObj.id] = []
+            votingData[i] = []
 
         game.votedInnocent = []
         game.votedGuilty = []
@@ -118,7 +118,7 @@ async def votingCycle(game:classes.game.Game):
             if (i.dead):
                 continue
 
-            options.append(disnake.SelectOption(label=f"{i.memberObj.name}", description=f"Click here to vote against {i.memberObj.name}", value = str(i.memberObj.id), emoji="🗳️"))
+            options.append(disnake.SelectOption(label=f"{i.memberObj.name}", description=f"Click here to vote against {i.memberObj.name}", value = str(i.id), emoji="🗳️"))
 
         options.append(disnake.SelectOption(label=f"Cancel", description=f"Cancel your current vote", emoji="❌"))
 
@@ -148,17 +148,26 @@ async def votingCycle(game:classes.game.Game):
                     await interaction.response.send_message(f"**__{interaction.author.name}__** has unvoted")
                     for k, v in votingData.items():
                         if (interaction.author.id in v):
-                            votingData[k].remove(selfPlayer.id)
+                            votingData[k].remove(selfPlayer)
                         
                     await updateStatusMsg(game, votingData, condition)
                     return
                 
-                votingData[int(self.values[0])].append(selfPlayer.id)
                 targetPlayer = classes.player.Player.get(int(self.values[0]), game)
-                await interaction.response.send_message(content=f"**__{interaction.author.name}__ <:vote:1009960345428820059>** has voted against **__{targetPlayer.memberObj.name}__ ({str(len(votingData[int(self.values[0])]))}/{str(condition)})**")
+                
+                votingData[targetPlayer].append(selfPlayer)
+                
+                def calculateVotes(votes):
+                    res = 0
+                    for i in votes:
+                        res += i.votingPower
+
+                    return res
+
+                await interaction.response.send_message(content=f"**__{interaction.author.name}__ <:vote:1009960345428820059>** has voted against **__{targetPlayer.memberObj.name}__ ({str(calculateVotes(votingData[targetPlayer]))}/{str(condition)})**")
                 await updateStatusMsg(game, votingData, condition)
                 
-                if (len(votingData[int(self.values[0])]) >= condition):
+                if (calculateVotes(votingData[targetPlayer]) >= condition):
                     global isAccusation
                     isAccusation = True
                     await enterAccusation(game, targetPlayer, votingMsg, view)
