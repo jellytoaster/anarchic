@@ -184,7 +184,6 @@ class PartyCog(commands.Cog):
             await inter.edit_original_message(embed=embed, view=HelpView())
 
             await asyncio.sleep(2)
-            print("i ran 2")
             await asyncio.create_task(cogs.gameplay.begin.start(game))
         except Exception as e:
             await classes.errorhandler.handle(inter.channel, e)

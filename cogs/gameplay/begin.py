@@ -88,7 +88,7 @@ async def sendRoles(game:classes.game.Game):
 async def genChannels(game:classes.game.Game):
     guild = game.guild
     category = await guild.create_category("Anarchic")
-    townsquare = game.channelTownSquare = await guild.create_text_channel("town-square", category=category)
+    townsquare = game.channelTownSquare = await guild.create_text_channel("town-square", category=category, topic="Discuss!")
     graveyard = game.channelGraveyard = await guild.create_text_channel("graveyard", category=category)
     mafiacontacts = game.channelMafia = await guild.create_text_channel("mafia-contacts", category=category)
 
@@ -211,6 +211,9 @@ async def start(game:classes.game.Game):
         embed.set_footer(text="Good luck.")
         await game.channelTownSquare.send(embed=embed)
 
+    if (config.TEST_MODE):
+        embed = disnake.Embed(title="TEST MODE: ROLE LIST", description="\n".join([f"{i.memberObj.mention} - {i.assignedRole.name} {i.assignedRole.emoji}" for i in game.playervar]))
+        await game.channelTownSquare.send(embed=embed)
 
     await asyncio.sleep(15)
     await asyncio.create_task(cogs.gameplay.night.nightCycle(game))

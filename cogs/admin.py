@@ -1,6 +1,6 @@
-from typing import Optional
 import disnake
 import os
+import classes.changelog
 import classes.contraction
 import sys
 import disnake.ext.commands.errors
@@ -59,9 +59,7 @@ class adminCommands(commands.Cog):
     @commands.check(adminCheck)
     async def fj(inter, player):
         game = classes.game.Game.checkForGame(player.guild)
-        if (player in game.players):
-            await inter.response.send_message("They are already in the game! Did you mean to use </leave:1081377829637324801> instead?", ephemeral=True)
-            return
+
         if (game.hasStarted):
             await inter.response.send_message("They're not allowed to join when a game is in progress!", ephemeral=True)
             return
@@ -76,7 +74,14 @@ class adminCommands(commands.Cog):
     @commands.slash_command(name="sendchangelog", description="send changelog to a channel", options=[Option("channel", "wher", OptionType.channel, True), Option("version", "ver", OptionType.string, True)], guild_ids=config.ADMIN_GUILDS)
     @commands.check(adminCheck)
     async def sendchangelog(self, inter, channel, version):
-        embed = basic.basic.getChangelog(version)[1].set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421").set_footer(text="Have fun!", icon_url=self.bot.user.display_avatar.url)
+        embed = classes.changelog.Changelog.getChangelog(version).makeEmbed().set_footer(text="Have fun!", icon_url=self.bot.user.display_avatar.url)
+        await channel.send(embed=embed)
+        await inter.response.send_message('done', ephemeral=True)
+
+    @commands.slash_command(name="sendcomingsoon", description="send a coming soon changelog to a channel", options=[Option("channel", "wher", OptionType.channel, True), Option("version", "ver", OptionType.string, True)], guild_ids=config.ADMIN_GUILDS)
+    @commands.check(adminCheck)
+    async def sendSoon(self, inter, channel, version):
+        embed = classes.changelog.Changelog.getChangelog(version).makeJustHighlights().set_footer(text="Coming soon!", icon_url=self.bot.user.display_avatar.url)
         await channel.send(embed=embed)
         await inter.response.send_message('done', ephemeral=True)
 

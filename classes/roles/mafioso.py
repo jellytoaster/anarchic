@@ -21,6 +21,8 @@ async def kill(targetPlayers:list, originPlayer:classes.player.Player, game):
         embed.set_footer(text="Interesting", icon_url=originPlayer.memberObj.display_avatar.url)
         await originPlayer.memberObj.send(embed=embed)
 
+async def doNothing(targetPlayers:list, originPlayer:classes.player.Player, game):
+    pass
 class Mafioso(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
         super().__init__(name, faction)
@@ -29,7 +31,7 @@ class Mafioso(role.Role):
         self.color = 0xd0021b
         self.order = 8
         self.emoji = "<:maficon:891739940055052328>"
-        self.abilities = [classes.ability.Ability(kill, utils.notMafiaAndNotDead, -1, "Assassinate", "Attack target player. They'll probably die.", "<:maficon:891739940055052328>", "kill", utils.headstart)]
+        self.abilities = [classes.ability.Ability(doNothing, utils.notMeAndNotDead, -1, "Shadow Syndicate", " You have access to Mafia night meeting.", type=classes.enums.AbilityType.Passive), classes.ability.Ability(kill, utils.notMafiaAndNotDead, -1, "Assassinate", "Attack target player. They'll probably die.", "<:maficon:891739940055052328>", "kill", utils.headstart)]
         self.constants = {"shortDescription": 'The right hand man of organized crime', "winCon" : "You win when all members of the **Town** <:townicon2:896431548717473812> have been defeated."}
 
 

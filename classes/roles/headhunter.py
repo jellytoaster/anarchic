@@ -53,7 +53,7 @@ class Headhunter(role.Role):
         self.type = "evil"
         self.order = 10
         self.emoji = "<:hhicon2:891429754643808276>"
-        self.abilities = [classes.ability.Ability(firstTarget, headHunterN1Targetting, -1, "Vengeful", "A random Town :town~2: starts the game as your Target. The Mayor :mayoricon: cannot be your Target this way.", "<:hhicon2:891429754643808276>", "target", utils.notDead, classes.enums.AbilityType.DayOne), classes.ability.Ability(vengance, utils.notMeAndNotDead, -1, "Vengance", "__Astrally__ mark target player. They are now your new __Target__.", "<:hhicon2:891429754643808276>", "target", utils.notDead), classes.ability.Ability(rest, utils.literallyAnyone, 1, "rest", "you win!", "🤓", "h", twoPoints, classes.enums.AbilityType.PassiveEarly, False)]
+        self.abilities = [classes.ability.Ability(firstTarget, headHunterN1Targetting, -1, "Vengeful", "A random **Townie** <:townicon2:896431548717473812> starts the game as your Target. The **Mayor** <:mayoricon:922566007946629131> cannot be your target this way.", "<:hhicon2:891429754643808276>", "target", utils.notDead, classes.enums.AbilityType.DayOne), classes.ability.Ability(vengance, utils.notMeAndNotDead, -1, "Vengance", "__Astrally__ mark target player. They are now your new __Target__.", "<:hhicon2:891429754643808276>", "target", utils.notDead), classes.ability.Ability(rest, utils.literallyAnyone, 1, "rest", "you win!", "🤓", "h", twoPoints, classes.enums.AbilityType.PassiveEarly, False)]
         self.constants = {"shortDescription": 'A vengeance-seeking outsider who holds a grudge against the town', "winCon" : "Get two of your targets <:lynch:1010226047456915547> **lynched**"}
 
 

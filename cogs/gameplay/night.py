@@ -71,6 +71,7 @@ async def sendTargetingEmbeds(game:classes.game.Game):
             i.defended = None
             i.isRoleBlocked = False
             i.isVoteBlocked = False
+            i.playerSelectedAbility = -1
             i.assignedRole.investigationResults.reset(i)
 
 
@@ -98,8 +99,9 @@ async def sendTargetingEmbeds(game:classes.game.Game):
             i.assignedRole.investigationResults.trackerTargetted = copy.copy(i.nightTargettedPlayers)
 
         # Second of all, calculate mafia night kill
-        for i in classes.player.Player.getPlayersWithRole("mafioso", game):
-            game.mafNightKill.append(i.nightTargettedPlayers[0])
+        for i in classes.player.Player.getPlayersWithRole("Mafioso", game):
+            if (i.nightTargettedPlayers != []):
+                game.mafNightKill.append(i.nightTargettedPlayers[0])
 
         # Process night actions, 1 goes first and so on
         hierarchy = sorted(game.playervar, key=lambda x: x.assignedRole.order, reverse=True)
@@ -113,7 +115,7 @@ async def sendTargetingEmbeds(game:classes.game.Game):
                         x.charges -= 1
                         await x.invokeMethod(x.targetingOptions(i, game.playervar, game), i, game)
 
-            if (len(i.nightTargettedPlayers) == 0):
+            if (len(i.nightTargettedPlayers) == 0 or i.playerSelectedAbility == -1):
                 continue
 
             if (i.isRoleBlocked):
@@ -124,7 +126,7 @@ async def sendTargetingEmbeds(game:classes.game.Game):
                 await i.memberObj.send(embed=embed)
                 continue
 
-            await i.assignedRole.abilities[0].invokeMethod(i.nightTargettedPlayers, i, game)
+            await i.assignedRole.abilities[i.playerSelectedAbility].invokeMethod(i.nightTargettedPlayers, i, game)
 
 
         await asyncio.sleep(5)
@@ -190,7 +192,7 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
                 selfPlayer.nightTargettedPlayers.clear()
                 selfPlayer.nightTargettedPlayers.append(targettedPlayer)
 
-                embed = disnake.Embed(title=f"**You decide to {selfPlayer.assignedRole.abilities[playerSelectedAbility].flavorText} {targettedPlayer.memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
+                embed = disnake.Embed(title=f"**You decide to {abilities[playerSelectedAbility].flavorText} {targettedPlayer.memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
 
                 embed.set_thumbnail(url=targettedPlayer.memberObj.display_avatar.url)
                 embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=interaction.author.display_avatar.url)
@@ -221,7 +223,8 @@ async def sendTargetingEmbed(i:classes.player.Player, game):
         embed.set_footer(text="You can't change your decision anymore", icon_url=i.memberObj.display_avatar.url)
         await i.memberObj.send(embed=embed)
     else:    
-        embed = disnake.Embed(title=f"**Your final decision is to {i.assignedRole.abilities[playerSelectedAbility].flavorText} {i.nightTargettedPlayers[0].memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
+        i.playerSelectedAbility = i.assignedRole.abilities.index(abilities[playerSelectedAbility])
+        embed = disnake.Embed(title=f"**Your final decision is to {abilities[playerSelectedAbility].flavorText} {i.nightTargettedPlayers[0].memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
 
         embed.set_thumbnail(url=i.nightTargettedPlayers[0].memberObj.display_avatar.url)
         embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=i.memberObj.display_avatar.url)

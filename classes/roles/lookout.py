@@ -14,7 +14,8 @@ def init():
 async def look(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
         visitedPlayers = targetPlayer.assignedRole.investigationResults.lookoutVisitedBy
-        visitedPlayers.remove(originPlayer)
+        if (originPlayer in visitedPlayers):
+            visitedPlayers.remove(originPlayer)
 
         if (len(visitedPlayers)) == 0:
             await originPlayer.memberObj.send(embed=disnake.Embed(title=f"Nobody visited your target last night.", colour=disnake.Colour(0x7ed321)).set_thumbnail(url=originPlayer.memberObj.display_avatar.url).set_footer(text="Interesting.", icon_url=originPlayer.memberObj.display_avatar.url))

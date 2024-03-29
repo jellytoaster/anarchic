@@ -5,6 +5,12 @@ import classes.enums
 import classes.contraction
 emojis = {"town": "<:townicon2:896431548717473812>", "mafia" : "<:mafia:1007768566789050378>", "evil": ":axe:", "good" : ":angel:", "randomtown" : "<:town:1007768656341651547>", "suspicious" : ":question:", "innocent" : ":thumbsup:", "neutral" : ":neutral_face:", "towninvestigative":"\🔎", "tm":"\🎶", "rt":"<:town:1007768656341651547>","townkilling":"\🔫","townprotective":"\💉","randommafia":"<:mafia:1007768566789050378>","ms":"\🥀","md":"\🎭","mk":"<:maf:891739940055052328>","ts":"\💬","associate": "<:assoicon:1006333104920735787>", "villager": "<:villyicon:1007714759409414274>", "associate": "<:assoicon:1006333104920735787>", "cop": "<:copicon2:889672912905322516>", "detective": "<:deticon2:889673135438319637>", "tracker": "<:trackicon:922885543812005949>", "lookout": "<:loicon2:889673190392078356>", "doctor": "<:docicon2:890333203959787580>", "vigilante": "<:enficon2:890339050865696798>", "attendant": "<:atticon:957688274418286602>", "psychic": "<:psyicon:1010900225130504192>", "mayor": "<:mayoricon:922566007946629131>", "mafioso": "<:maficon2:891739940055052328>", "framer": "<:frameicon2:890365634913902602>", "consigliere": "<:consigicon2:896154845130666084>", "janitor": "<:janiicon:923219547325091840>", "consort": "<:consicon2:890336628269281350>",  "headhunter": "<:hhicon2:891429754643808276>", "executioner": "<:hhicon2:891429754643808276>", "jester": "<:jesticon2:889968373612560394>", "framer": "<:framed:890365634913902602>", "agent": "<:agenticon2:1011769559662985246>", "lookout": "<:loicon2:1011291078248366110>,", "janitor": "<:janiicon:939311465796599818>", "bodyguard": "<:bgicon:1018521495439429702>"}
 
+def isAnarchicCategory(channel:disnake.TextChannel):
+    if (channel.category.name == "Anarchic" and [i.name for i in channel.category.text_channels] == ["town-square", "graveyard", "mafia-contacts"]):
+        if (channel.category.channels[0].topic == "Discuss!"):
+            return True
+    return False
+
 def roleEmoji(name:str):
     try:
         return emojis[name.lower()]
@@ -26,6 +32,11 @@ async def createRoleIfNotExist(guild, roleName:str):
     
 async def makePrivate(channel:disnake.channel.TextChannel):
     await channel.set_permissions(channel.guild.default_role, view_channel=False, read_messages=False)
+
+async def mafiaModifySend(channel:disnake.channel.TextChannel, game:classes.game.Game, lock=False):
+    for i in game.playervar:
+        if (i.assignedRole.faction.value.lower() == "mafia" or i.dead):
+            await channel.set_permissions(i.memberObj, send_messages=lock, view_channel=i.assignedRole.faction.value.lower() == "mafia")
 
 async def modifySendPermissions(channel:disnake.channel.TextChannel, game:classes.game.Game, **kwargs):
     """
@@ -55,9 +66,13 @@ async def modifySendPermissions(channel:disnake.channel.TextChannel, game:classe
     overwrite = channel.overwrites_for(deadRole)
     overwrite.send_messages = kwargs["dead"]
     await channel.set_permissions(deadRole, overwrite=overwrite)
+    
+    print(overwrite)
+
     overwrite = channel.overwrites_for(playerRole)
     overwrite.send_messages = kwargs["alive"]
     await channel.set_permissions(playerRole, overwrite=overwrite)
+    print("---")
 
 async def modifyReadPermissions(channel:disnake.channel.TextChannel, game:classes.game.Game, **kwargs):
     """
