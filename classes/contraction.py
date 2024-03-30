@@ -20,7 +20,8 @@ class Contraction():
         Contraction("town", "investigative", "Town Investigative", "🔍")
         Contraction("town", "killing", "Town Killing", "🔫")
         Contraction("town", "protective", "Town Protective", "💉")  
-        Contraction("town", "vanilla", "Town Vanilla", "🏠", False)        
+        Contraction("town", "support", "Town Support", "💬")       
+        Contraction("town", "vanilla", "Town Vanilla", "🏠", False)         
 
         # Mafia Roles
         Contraction("mafia", "", "Random Mafia", "🌹")

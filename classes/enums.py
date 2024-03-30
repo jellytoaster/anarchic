@@ -25,7 +25,7 @@ class AbilityType(Enum):
     Night = "night"
     Dawn = 2
     Dusk = 3
-    PassiveDawn = "passive"
-    PassiveDusk = "passive"
-    PassiveEarly = "passive"
-    DayOne = "passive"
+    PassiveDawn = "passivedawn"
+    PassiveDusk = "passivedusk"
+    PassiveEarly = "passiveearly"
+    DayOne = "passived1"

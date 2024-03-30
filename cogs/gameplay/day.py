@@ -33,7 +33,8 @@ async def dayCycle(game:classes.game.Game):
 
         embed = disnake.Embed(title=f"It Is Day {game.dayNum} ☀️", color=disnake.Colour((0x7ed321)))
         
-        embed.set_image(url="https://images-ext-2.discordapp.net/external/8cFuWNzv5vDa4TbO68gg5Up4DSxguodCGurCAtDpWgU/%3Fwidth%3D936%26height%3D701/https/media.discordapp.net/attachments/765738640554065962/878068703672016968/unknown.png")
+        # the website the day image was hosted on is ded 
+        # embed.set_image(url="https://media.discordapp.net/attachments/765738640554065962/886652670230790214/unknown.png?ex=6612cca5&is=660057a5&hm=ee4302bd529d66529a8c97b2f6203b95a357afd486def2e0de485b5d4a704405&=&format=webp&quality=lossless&width=196&height=200")
         embed.set_footer(text="Talk, Bait, Claim.")
 
         #player and dead fields
@@ -202,7 +203,6 @@ async def votingCycle(game:classes.game.Game):
 
                 voterString = ""
                 for i in votingData[player]:
-                    i = classes.player.Player.get(i, game)
                     voterString += i.memberObj.mention
                 
                 embed.add_field(name=f"**{len(votingData[player])} - {player.memberObj.name}**", value="`Voters:` " + voterString, inline=False)

@@ -186,13 +186,13 @@ async def getCurrentLynch(votingData, game):
     highestVotePlayer = None
     isTied = False
 
-    for key, value in votingData.items():
+    for member in game.playervar:
+        value = votingData[member]
         if (type(value) is list):
             if (len(value) != 0):
                 if (len(value) > highestVote):
                     highestVote = len(value)
-                    player = classes.player.Player.get(key, game)
-                    highestVotePlayer = player.memberObj.global_name
+                    highestVotePlayer = member.memberObj.global_name
                     isTied == False
                 elif (len(value) == highestVote):
                     isTied = True

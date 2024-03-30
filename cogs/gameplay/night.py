@@ -146,8 +146,8 @@ async def sendTargetingEmbeds(game:classes.game.Game):
                 await i.memberObj.send(embed=embed)
                 continue
 
-            await i.assignedRole.abilities[i.playerSelectedAbility].invokeMethod(i.nightTargettedPlayers, i, game)
-
+            abilities = [x for x in i.assignedRole.abilities if x.type == classes.enums.AbilityType.Night] 
+            await abilities[i.playerSelectedAbility].invokeMethod(i.nightTargettedPlayers, i, game)
 
         await asyncio.sleep(5)
 
@@ -188,25 +188,35 @@ async def sendAbilitySelectionEmbed(originPlayer:classes.player.Player, game, ti
         async def callback(self, interaction: MessageInteraction) -> None:
             self.disabled = True
 
-            await sendTargetingEmbed(originPlayer, game, timestamp - time.time(), self.values[0], interaction)
-            await msg.edit(view=self.view)
-            
+            if self.values[0] == "-1":
+                await msg.edit(view=self.view)
+
+                embed = disnake.Embed(title=f"**Your decision is to do nothing tonight**", colour=disnake.Colour(0xbbf6ff))
+
+                embed.set_thumbnail(url=originPlayer.memberObj.display_avatar.url)
+                embed.set_footer(text="You can't change your decision anymore", icon_url=originPlayer.memberObj.display_avatar.url)
+                await interaction.response.send_message(embed=embed)
+            else:
+                await sendTargetingEmbed(originPlayer, game, timestamp - time.time(), self.values[0], interaction)
+                await msg.edit(view=self.view)
+                
     class SelectionView(disnake.ui.View):
         def __init__(self) -> None:
             super().__init__(timeout=30)
             self.add_item(AbilitySelectionDropdown())
 
         async def on_timeout(self) -> None:
-            for child in self.children:
-                child.disabled = True
+            if (originPlayer.playerSelectedAbility == -1):
+                for child in self.children:
+                    child.disabled = True
 
-            await msg.edit(view=self)
+                await msg.edit(view=self)
 
-            embed = disnake.Embed(title=f"**Your final decision is to do nothing tonight**", colour=disnake.Colour(0xbbf6ff))
+                embed = disnake.Embed(title=f"**Your final decision is to do nothing tonight**", colour=disnake.Colour(0xbbf6ff))
 
-            embed.set_thumbnail(url=originPlayer.memberObj.display_avatar.url)
-            embed.set_footer(text="You can't change your decision anymore", icon_url=originPlayer.memberObj.display_avatar.url)
-            await originPlayer.memberObj.send(embed=embed)
+                embed.set_thumbnail(url=originPlayer.memberObj.display_avatar.url)
+                embed.set_footer(text="You can't change your decision anymore", icon_url=originPlayer.memberObj.display_avatar.url)
+                await originPlayer.memberObj.send(embed=embed)
 
     msg = await originPlayer.memberObj.send(embed=embed, view=SelectionView())
     
