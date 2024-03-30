@@ -67,13 +67,10 @@ async def modifySendPermissions(channel:disnake.channel.TextChannel, game:classe
     overwrite.send_messages = kwargs["dead"]
     await channel.set_permissions(deadRole, overwrite=overwrite)
     
-    print(overwrite)
 
     overwrite = channel.overwrites_for(playerRole)
     overwrite.send_messages = kwargs["alive"]
     await channel.set_permissions(playerRole, overwrite=overwrite)
-    print("---")
-
 async def modifyReadPermissions(channel:disnake.channel.TextChannel, game:classes.game.Game, **kwargs):
     """
     |coro|
@@ -135,6 +132,8 @@ def notMafiaAndNotDead(me, allPlayers, game):
 
     return res
 
+def nobody(me, allPlayers, game):
+    return []
 
 def literallyAnyone(me, allPlayers, game):
     return allPlayers
@@ -231,6 +230,14 @@ def chargeCountSimple(charges):
     if (charges == -1):
         return "Unlimited charges"
     elif (charges - 1 == 0):
+        return "No charges"
+    else:
+        return f"{charges} {plural(charges, 'charge')}"
+
+def chargeCountSimpleSimple(charges):
+    if (charges == -1):
+        return "Unlimited charges"
+    elif (charges == 0):
         return "No charges"
     else:
         return f"{charges} {plural(charges, 'charge')}"

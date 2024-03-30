@@ -8,7 +8,7 @@ from classes.contraction import Contraction
 from cogs import party, setupManagement, admin, endGame, basic, help
 from disnake.ext import commands
 
-bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(presences=True,members=True, guilds=True), shard_count=2)
+bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(29447), shard_count=2)
 
 @bot.event
 async def on_ready():
@@ -27,8 +27,8 @@ def main():
 
     # Init roles in /classes/roles
     cwd = os.getcwd()
-    for file in os.listdir("/classes/roles"):
-        path = os.path.join("/classes/roles", file)
+    for file in os.listdir("classes/roles"):
+        path = os.path.join("classes/roles", file)
 
         module = os.path.splitext(os.path.basename(path))[0]
 

@@ -14,6 +14,7 @@ class Role:
         self.type = ""
         self.investigationResults = None
         self.promotionOrder = 0
+        self.alwaysUseAbilitySelection = False
         self.abilities:list = []
         self.order = 0 # 0 is first, higher numbers have their role action processed later
         self.constants = {"winCon": "Just win!", "shortDescription": "A role."}
@@ -36,7 +37,7 @@ class Role:
         abilities = ""
         for i in self.abilities:
             if i.visible:
-                charge = f'{"- " + utils.chargeCountSimple(i.charges) if i.type.value != "passive" else ""}'
+                charge = f'{"- " + utils.chargeCountSimpleSimple(i.charges) if i.type.value != "passive" else ""}'
                 abilities += f"{emojis[i.type.value]} **{i.name} ({string.capwords(i.type.value)}) {charge}**\n{i.description}\n\n"
 
         if (abilities != ""):
@@ -57,7 +58,7 @@ class Role:
         abilities = ""
         for i in self.abilities:
             if i.visible:
-                charge = f'{"- " + utils.chargeCountSimple(i.charges) if i.type.value != "passive" else ""}'
+                charge = f'{"- " + utils.chargeCountSimpleSimple(i.charges) if i.type.value != "passive" else ""}'
                 abilities += f"{emojis[i.type.value]} **{i.name} ({string.capwords(i.type.value)}) {charge}**\n{i.description}\n\n"
 
         if (abilities != ""):
@@ -69,3 +70,6 @@ class Role:
         embed.set_thumbnail(f"https://cdn.discordapp.com/emojis/{self.emoji.split(':')[2].replace('>', '')}.webp?format=webp&width=76&height=64")
 
         return embed
+    
+    def getIconUrl(self):
+        return f"https://cdn.discordapp.com/emojis/{self.emoji.split(':')[2].replace('>', '')}.webp?format=webp&width=76&height=64"

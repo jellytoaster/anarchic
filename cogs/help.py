@@ -9,7 +9,12 @@ def createEmbed(type:str, author:disnake.Member):
 
     }
 
-    return helpEmbeds[type].set_thumbnail(author.guild.icon.url).set_footer(text="Try using one of the commands!", icon_url=author.display_avatar.url)
+    res = helpEmbeds[type].set_footer(text="Try using one of the commands!", icon_url=author.display_avatar.url)
+
+    if author.guild.icon:
+        res.set_thumbnail(url=author.guild.icon.url)
+
+    return res
 
 class HelpCog(commands.Cog):
     def __init__(self, bot):
@@ -21,7 +26,8 @@ class HelpCog(commands.Cog):
         if (category is None):
             embed = disnake.Embed(title="**Welcome to Anarchic!**", colour=disnake.Colour(0xf8e71c), description="Anarchic is a bot that hosts games of Anarchic, which are styled similar to the classic party game Mafia!")
 
-            embed.set_thumbnail(url=inter.guild.icon.url)
+            if inter.guild.icon:
+                embed.set_thumbnail(url=inter.guild.icon.url)
             embed.set_footer(text="Try using one of the commands!", icon_url=inter.author.display_avatar.url)
 
             embed.add_field(name="⇒ **Categories**", value="**Info** - `/help info`\n**Party** - `/help party`\n**Setup** - `/help setup`")

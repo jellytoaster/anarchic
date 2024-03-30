@@ -91,7 +91,7 @@ class adminCommands(commands.Cog):
         selectedRole:roles.Role = roles.Role.toRole(role.lower())
 
         embed = disnake.Embed(title=f"Your role is {string.capwords(selectedRole.name)}", description="[FLAVOR TEXT HERE.]", color=selectedRole.color)
-        embed.set_thumbnail(f"https://cdn.discordapp.com/emojis/{selectedRole.emoji.split(':')[2].replace('>', '')}.webp?format=webp&width=76&height=64")
+        embed.set_thumbnail(selectedRole.getIconUrl())
 
         embed.add_field("**Atk :crossed_swords::**", "idk change this")
         embed.add_field("**Res :shield::**", "idk change this")

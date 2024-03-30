@@ -11,6 +11,14 @@ class basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # if i'm mentioned, reply to ensure i'm alive
+    @commands.Cog.listener()
+    async def on_message(self, message:disnake.Message):
+        if message.author.id == self.bot.user.id:
+            return
+        if self.bot.user.mentioned_in(message):
+            await message.channel.send("Welcome to Anarchic! Use </help:1197301625224704040> for more info.", reference=message, mention_author=False)
+
     @commands.slash_command(name="role", description="Get info on a specific role", options=[disnake.Option(name="name", description="What role?", type=disnake.OptionType.string, required=True)])
     async def role(self, inter:disnake.ApplicationCommandInteraction, name):
         if (classes.role.Role.toRole(name) == None):

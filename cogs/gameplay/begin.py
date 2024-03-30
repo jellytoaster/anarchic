@@ -123,7 +123,7 @@ async def genChannels(game:classes.game.Game):
     embed.set_thumbnail(url="https://images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%3Fwidth%3D468%26height%3D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?width=374&height=374")
     embed.set_footer(text="Good luck.")
 
-    embed.add_field(name="**How to Play💡**", value="Each player is secretly assigned a role at the start of the game and has to fulfill their goal. To see the list of roles, try typing `/roles`. The game alternates between a day and night cycle. For more infomation, use `/howtoplay`.", inline=False)
+    embed.add_field(name="**How to Play💡**", value="Each player is secretly assigned a role at the start of the game and has to fulfill their goal. To see the list of roles, try typing `/roles`. The game alternates between a day and night cycle. For more infomation, use `/guide`.", inline=False)
     embed.add_field(name="**Rules :pushpin:**", value="Here are a list of rules to follow.", inline=False)
     embed.add_field(name="**No Screenshoting :camera_with_flash:**", value="Screenshoting is strictly forbidden, as it is cheating and ruins the game for everyone.", inline=False)
     embed.add_field(name="**No Copy And Pasting :pencil:**", value="Copy and pasting information is also considered breaking the rules, as it is also cheating.", inline=False)
