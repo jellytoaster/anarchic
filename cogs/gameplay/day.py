@@ -85,6 +85,15 @@ async def dayCycle(game:classes.game.Game):
         await game.channelTownSquare.send(embed=embed)
 
         await utils.modifySendPermissions(game.channelTownSquare, game, dead=False, alive=True)
+
+        # perform dawn passives
+        for i in game.playervar:
+            for x in i.assignedRole.abilities:
+                if (x.type == classes.enums.AbilityType.PassiveDawn):
+                    if (x.usableFunction(i, game) and utils.chargeUsable(x.charges)):
+                        x.charges -= 1
+                        await x.invokeMethod(x.targetingOptions(i, game.playervar, game), i, game)
+
         await asyncio.sleep(20)
 
         await asyncio.create_task(votingCycle(game))
@@ -187,18 +196,16 @@ async def votingCycle(game:classes.game.Game):
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1010903922916991006.webp?size=96&quality=lossless")
             embed.set_footer(text="Noon ends in 90 seconds")
 
-            for key, value in votingData.items():
-                votePlayer = classes.player.Player.get(key, game)
-
-                if votePlayer.dead:
+            for player in game.playervar:
+                if player.dead:
                     continue
 
                 voterString = ""
-                for i in value:
+                for i in votingData[player]:
                     i = classes.player.Player.get(i, game)
                     voterString += i.memberObj.mention
                 
-                embed.add_field(name=f"**{len(value)} - {votePlayer.memberObj.name}**", value="`Voters:` " + voterString, inline=False)
+                embed.add_field(name=f"**{len(votingData[player])} - {player.memberObj.name}**", value="`Voters:` " + voterString, inline=False)
 
             if statusMsg == None:
                 statusMsg = await game.channelTownSquare.send(embed=embed)
