@@ -47,7 +47,7 @@ class Player():
 
     # Kill player, True if successful and False otherwise.
     async def kill(self, deathReason:classes.enums.DeathReason, game:Game, force=False):
-        if (self.defended == None or force == True):
+        if (self.defended != None or force == True):
 
             # Silence them for good by changing their role to dead
             await self.memberObj.remove_roles(game.rolePlayer)
@@ -61,10 +61,11 @@ class Player():
 
             return True
         else:
-            embed = disnake.Embed(title="**Your target was attacked last night!**", colour=disnake.Colour(0x7ed321))
-            embed.set_thumbnail(url="https://media.discordapp.net/attachments/765738640554065962/970492620788871168/BGIcon.png")
-            embed.set_footer(text="Try whispering to your target", icon_url=self.defended.memberObj.display_avatar.url)
-            await self.defended.memberObj.send(embed=embed)
+            if self.defended[1]:
+                embed = disnake.Embed(title="**Your target was attacked last night!**", colour=disnake.Colour(0x7ed321))
+                embed.set_thumbnail(url="https://media.discordapp.net/attachments/765738640554065962/970492620788871168/BGIcon.png")
+                embed.set_footer(text="Try whispering to your target", icon_url=self.defended.memberObj.display_avatar.url)
+                await self.defended[0].memberObj.send(embed=embed)
 
             embed = disnake.Embed(title="**You were attacked, but someone protected you from harm!**", colour=disnake.Colour(0x7ed321))
 

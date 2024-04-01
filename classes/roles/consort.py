@@ -24,7 +24,7 @@ class Consort(role.Role):
         self.color = 0xd0021b
         self.promotionOrder = 3
         self.type = "support"
-        self.order = 0
+        self.order = -1
         self.emoji = "<:consicon2:890336628269281350>"
         self.abilities = [classes.ability.Ability(doNothing, utils.notMeAndNotDead, -1, "Shadow Syndicate", " You have access to Mafia night meeting. If there is no living <:maficon:891739940055052328>**Mafioso**, you have the __second__ priority to become the <:maficon:891739940055052328> **Mafioso**", type=classes.enums.AbilityType.Passive), classes.ability.Ability(roleblockplayer, utils.notMafiaAndNotDead, -1, "Capivate", "__Distract__ target player.", self.emoji, "distract")]
         self.constants = {"shortDescription": 'A captivating performer working for the mob', "winCon" : "You win when all members of the **Town** <:townicon2:896431548717473812> have been defeated."}
