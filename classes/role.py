@@ -17,6 +17,7 @@ class Role:
         self.alwaysUseAbilitySelection = False
         self.abilities:list = []
         self.order = 0 # 0 is first, higher numbers have their role action processed later
+        """The order as their ability runs. The smaller the number, the earlier their abilities run."""
         self.constants = {"winCon": "Just win!", "shortDescription": "A role."}
         
         Role.allRoles.append(self)

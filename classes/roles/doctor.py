@@ -13,7 +13,7 @@ def init():
 
 async def protect(targetPlayers:list, originPlayer:classes.player.Player, game):
         targetPlayer:classes.player.Player = targetPlayers[0]
-        targetPlayer.defended = originPlayer
+        targetPlayer.defended = (originPlayer, True)
 
 class Doctor(role.Role):
     def __init__(self, name: str, faction: classes.enums.Faction):
@@ -24,7 +24,7 @@ class Doctor(role.Role):
         self.type = "protective"
         self.order = 10
         self.emoji = "<:docicon2:890333203959787580>"
-        self.abilities = [classes.ability.Ability(protect, utils.notMeAndNotDead, -1, "Heal", "__Heal__ target player. You will grant your target a __Powerful Resistance__ for the night. Both you and your target will be notified if your target is __attacked__.", "💖", "heal")]
+        self.abilities = [classes.ability.Ability(protect, utils.notDead, -1, "Heal", "__Heal__ target player. You will grant your target a __Powerful Resistance__ for the night. Both you and your target will be notified if your target is __attacked__.", "💖", "heal")]
         self.constants = {"shortDescription": 'A secret surgeon who heals people at night', "winCon" : "Eliminate all criminals who may try to harm the **Town <:town:1007768656341651547>**"}
 
 
