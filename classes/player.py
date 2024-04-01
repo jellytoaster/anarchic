@@ -47,7 +47,7 @@ class Player():
 
     # Kill player, True if successful and False otherwise.
     async def kill(self, deathReason:classes.enums.DeathReason, game:Game, force=False):
-        if (self.defended != None or force == True):
+        if (self.defended == None or force == True):
 
             # Silence them for good by changing their role to dead
             await self.memberObj.remove_roles(game.rolePlayer)
