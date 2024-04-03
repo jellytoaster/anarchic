@@ -47,7 +47,7 @@ class setupManagement(commands.Cog):
             await inter.response.send_message("The game has already started!", ephemeral=True)
             return
         
-        if (role not in [string.capwords(e.name) for e in classes.role.Role.allRoles] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions]):
+        if (role.lower() not in [e.name.lower() for e in classes.role.Role.allRoles] + [e.display_name.lower() for e in classes.contraction.Contraction.allContractions]):
             await inter.response.send_message("That isn't a role.", ephemeral=True)
             return
         
@@ -77,7 +77,7 @@ class setupManagement(commands.Cog):
         if (game.hasStarted):
             await inter.response.send_message("The game has already started!", ephemeral=True)
             return
-        if (role not in [string.capwords(e.name) for e in classes.role.Role.allRoles] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions]):
+        if (role.lower() not in [e.name.lower() for e in classes.role.Role.allRoles] + [e.display_name.lower() for e in classes.contraction.Contraction.allContractions]):
             await inter.response.send_message("That isn't a role.", ephemeral=True)
             return
 

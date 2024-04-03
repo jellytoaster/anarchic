@@ -63,7 +63,7 @@ class basic(commands.Cog):
 
             async def callback(self, inter: disnake.MessageInteraction):
                 await inter.response.send_message(
-                    embed=classes.role.Role.toRole(self.values[0].lower()).roleEmbed,
+                    embed=classes.role.Role.toRole(self.values[0].lower()).buildEmbed(),
                     ephemeral=True
                 )
 

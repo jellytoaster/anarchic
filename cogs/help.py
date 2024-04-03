@@ -24,7 +24,7 @@ class HelpCog(commands.Cog):
     async def help(inter:disnake.ApplicationCommandInteraction, category:str=None):
         embed = None
         if (category is None):
-            embed = disnake.Embed(title="**Welcome to Anarchic!**", colour=disnake.Colour(0xf8e71c), description="Anarchic is a bot that hosts games of Anarchic, which are styled similar to the classic party game Mafia!")
+            embed = disnake.Embed(title="**Welcome to Anarchic!**", colour=disnake.Colour(0xf8e71c), description="*Anarchic is a bot that hosts games of Anarchic, which are styled similar to the classic party game Mafia!*\n\n***Learning how to play Anarchic? Use `/guide`!***")
 
             if inter.guild.icon:
                 embed.set_thumbnail(url=inter.guild.icon.url)

@@ -5,10 +5,10 @@ import importlib
 import config
 import classes.changelog
 from classes.contraction import Contraction
-from cogs import party, setupManagement, admin, endGame, basic, help
+from cogs import party, setupManagement, admin, endGame, basic, help, guide
 from disnake.ext import commands
 
-bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(29447), shard_count=2)
+bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(32767), shard_count=2)
 
 @bot.event
 async def on_ready():
@@ -53,6 +53,7 @@ def main():
     bot.add_cog(endGame.endGame(bot))
     bot.add_cog(basic.basic(bot))
     bot.add_cog(help.HelpCog(bot))
+    bot.add_cog(guide.GuideCog(bot))
 
 
     print("Connecting to Discord")
