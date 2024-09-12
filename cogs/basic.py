@@ -24,8 +24,28 @@ class basic(commands.Cog):
         if (classes.role.Role.toRole(name) == None):
             await inter.response.send_message("That's not a role!", ephemeral=True)
             return
+        
+        embed = classes.role.Role.toRole(name).buildEmbedSimple()
+        
+        class RoleView(disnake.ui.View):
+            def __init__(self) -> None:
+                super().__init__(timeout=180)
+                self.inter:disnake.ApplicationCommandInteraction = inter
 
-        await inter.response.send_message(embed=classes.role.Role.toRole(name).buildEmbedSimple())
+            async def on_timeout(self) -> None:
+                for child in self.children:
+                    child.disabled = True
+
+                newEmbed = embed.set_footer(text="This interaction has timed out. Use /role again to use the button.")
+                await self.inter.edit_original_message(embed=newEmbed, view=self)
+
+            @disnake.ui.button(label="Investigation Results", emoji="<:magn:1226319132061077624>", style=disnake.ButtonStyle.grey)
+            async def investigationresults(self, button, intera):
+                embed = classes.role.Role.toRole(name).buildInvestigationResults()
+                await intera.response.send_message(embed=embed)
+
+        view = RoleView()
+        await inter.response.send_message(embed=embed, view=view)
 
     @commands.slash_command(name="roles", description="Get a description of every role in Anarchic")
     async def roles(self, inter: disnake.ApplicationCommandInteraction):
@@ -56,14 +76,14 @@ class basic(commands.Cog):
                         emoji=i.emoji,
                         value=i.name
                     )
-                    for i in classes.role.Role.allRoles
+                    for i in classes.role.Role.allRoles[:25]
                 ]
 
                 super().__init__(placeholder="Select a role for more info...", options=options)
 
             async def callback(self, inter: disnake.MessageInteraction):
                 await inter.response.send_message(
-                    embed=classes.role.Role.toRole(self.values[0].lower()).buildEmbed(),
+                    embed=classes.role.Role.toRole(self.values[0].lower()).buildEmbedSimple(),
                     ephemeral=True
                 )
 
@@ -80,6 +100,7 @@ class basic(commands.Cog):
                 newEmbed = embed.set_footer(text="This interaction has timed out. Use /roles again to use the dropdown.")
 
                 await self.inter.edit_original_message(embed=newEmbed, view=self)
+
 
         view = RoleView()
         await inter.response.send_message(embed=embed, view=view)
@@ -126,7 +147,8 @@ class basic(commands.Cog):
             def __init__(self):
                 options = []
                 for k, v in classes.changelog.Changelog.changelogs.items():
-                    options.append(disnake.SelectOption(label=v.ver, description=v.description, emoji=v.emoji))
+                    if (v.usable):
+                        options.append(disnake.SelectOption(label=v.ver, description=v.description, emoji=v.emoji))
 
                 super().__init__(placeholder="Select a version...", options=options)
             
@@ -152,7 +174,7 @@ class basic(commands.Cog):
         await inter.response.send_message(embed=classes.changelog.Changelog.getChangelog(config.VERSION).makeEmbed().set_footer(text="Use the dorpdown to select a version.", icon_url=inter.author.avatar.url), view=ChangelogView())
 
     @commands.slash_command(name="about", description="Learn about devs of Anarchic, and invite the bot to your server!")
-    async def about(inter):
+    async def about(inter:disnake.ApplicationCommandInteraction):
         embed = disnake.Embed(title="Anarchic", colour=disnake.Colour(0xff8b6c), description="*Hosts games of Anarchic, which are styled similar to the classic party game Mafia!*")
 
         embed.set_thumbnail(url=inter.guild.icon.url)
@@ -160,6 +182,8 @@ class basic(commands.Cog):
         embed.add_field(name="Invite me", value="[Click Here](https://discord.com/api/oauth2/authorize?client_id=887118309827432478&permissions=268954688&scope=bot+applications.commands)", inline=False)
         embed.add_field(name="Join the support server", value="[Click Here](https://discord.gg/8CF3Ccgq8c)", inline=False)
         embed.add_field(name="Anarchic Dev Team", value=f"**:art: Artists - evanzhaaa, temporary0533**\n**:computer: Programmers - jellytoaster**\n**:video_game: Designer - c.atasyl**")
+
+        embed.add_field(name="Special Thanks", value=f"**:art: c.atasyl, skippppyyy**")
 
         await inter.response.send_message(embed=embed)
 

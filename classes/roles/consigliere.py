@@ -25,8 +25,10 @@ async def doNothing(targetPlayers:list, originPlayer:classes.player.Player, game
     return
 
 class Consigliere(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        
+        self.faction = Faction.Mafia
         self.investigationResults = investigationResults(True, "Your target is the ingenious advisor to the Mafia.")
         self.color = 0xd0021b
         self.type = "support"

@@ -20,8 +20,9 @@ async def roleBlock(targetPlayers:list, originPlayer:classes.player.Player, game
         i.isRoleBlocked = True
 
 class Jester(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Neutral
         self.investigationResults = investigationResults(False, "Your target is a crazed lunatic waiting to be hung.")
         self.type = "evil"
         self.color = 0xf1cbe2

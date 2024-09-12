@@ -109,6 +109,7 @@ class PartyCog(commands.Cog):
             return
         if (game.hasStarted):
             await inter.response.send_message("You're not allowed to promote when a game is in progress!", ephemeral=True)
+            return
 
         p = game.players.index(player)
         game.players[0], game.players[p] = game.players[p], game.players[0]
@@ -120,7 +121,7 @@ class PartyCog(commands.Cog):
 
     @commands.slash_command(description="Start the game!")
     async def start(self, inter:disnake.ApplicationCommandInteraction):
-        game = Game.checkForGame(inter.guild)
+        game:Game = Game.checkForGame(inter.guild)
         if (game.hasStarted == True):
             await inter.response.send_message("The game has already started!", ephemeral=True)
             return
@@ -137,7 +138,7 @@ class PartyCog(commands.Cog):
         def fufillsRoleCiteria():
             numPlayers = len(game.players)
             numMafiasRequired = 0
-            numMafias = len([i for i in game.setupData.roles if classes.role.Role.toRole(i).faction == classes.enums.Faction.Mafia])
+            numMafias = game.setupData.getMafiaCount()
 
             #calculate mafia roles required
             if 1 <= numPlayers <= 6:
@@ -158,6 +159,14 @@ class PartyCog(commands.Cog):
         embed.set_thumbnail(url="https://images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%3Fwidth%3D468%26height%3D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png")
 
         await inter.response.send_message(embed=embed)
+
+        for i in game.guild.members:
+            if (game.rolePlayer in i.roles):
+                await i.remove_roles(game.rolePlayer)
+
+        for i in game.guild.members:
+            if (game.roleDead in i.roles):
+                await i.remove_roles(game.roleDead)
 
         game.channelStartChannel = inter.channel
         await cogs.gameplay.begin.prep(game)

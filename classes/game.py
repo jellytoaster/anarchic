@@ -1,8 +1,3 @@
-if __name__ == "__main__":
-
-    
-    from classes import player
-
 from classes import setupData
 import classes.enums
 import disnake
@@ -12,30 +7,34 @@ allGuildGames = {}
 
 class Game():
     def __init__(self, guild:disnake.Guild) -> None:
-        self.players:list(disnake.Member) = []
-        self.playervar:list(player.Player) = []
-        self.hasStarted = False
-        self.guild = guild
-        allGuildGames[guild.id] = self
+        from classes.player import Player
+        self.players:list[disnake.Member] = []
+        self.playervar:list[Player] = []
+        self.hasStarted:bool= False
+        self.guild:disnake.Guild = guild
+
         self.setupData:setupData.SetupData = setupData.SetupData(self)
-        self.channelTownSquare = None
-        self.channelStartChannel = None
+        self.channelTownSquare:disnake.TextChannel = None
+        self.channelStartChannel:disnake.TextChannel = None
         self.channelMafia:disnake.TextChannel = None
-        self.channelGraveyard = None
-        self.rolePlayer = None
-        self.roleDead = None
-        self.dayNum = 0
-        self.finished = False
-        self.daysWithoutDeath = 0
-        self.accusedPlayer = None
-        self.votedInnocent = []
-        self.votedGuilty = []
-        self.headStart= False
-        self.currentRound = 0
-        self.mafNightKill = []
+        self.channelGraveyard:disnake.TextChannel = None
+        self.rolePlayer:disnake.Role = None
+        self.roleDead:disnake.Role = None
+        self.dayNum:int = 0
+        self.finished:bool = False
+        self.daysWithoutDeath:int = 0
+        self.accusedPlayer:Player = None
+        self.votedInnocent:list[Player] = []
+        self.votedGuilty:list[Player] = []
+        self.headStart:bool = False
+        self.currentRound:int = 0
+        self.mafNightKill:list[Player] = []
+
+        allGuildGames[guild.id] = self
 
     def reset(self):
-        self.playervar:list(player.Player) = []
+        from classes.player import Player
+        self.playervar:list[Player] = []
         self.hasStarted = False
         self.channelTownSquare = None
         self.channelStartChannel = None

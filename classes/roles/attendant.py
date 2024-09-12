@@ -8,6 +8,7 @@ from classes.enums import Faction
 from  classes.investigationResults import investigationResults
 
 # UNINISHED!!! DO NOT FORGET TO FINISH
+# nvm its finished 
 
 def init():
     Attendant("Attendant", Faction.Town)
@@ -16,8 +17,9 @@ def roleblockplayer(targetPlayers:list, originPlayer:classes.player.Player, game
     targetPlayers[0].isRoleBlocked = True
 
 class Attendant(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Town
         self.investigationResults = investigationResults(True, "Your target soothes those around them.")
         self.color = 0x7ed321
         self.type = "support"

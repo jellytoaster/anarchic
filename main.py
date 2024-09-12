@@ -1,7 +1,11 @@
 import disnake
 import time
 import os
+import inspect
+import random
 import importlib
+import classes.ability
+import classes.role
 import config
 import classes.changelog
 from classes.contraction import Contraction
@@ -9,6 +13,8 @@ from cogs import party, setupManagement, admin, endGame, basic, help, guide
 from disnake.ext import commands
 
 bot = commands.AutoShardedInteractionBot(intents=disnake.Intents(32767), shard_count=2)
+
+random.seed(time.time())
 
 @bot.event
 async def on_ready():
@@ -21,12 +27,12 @@ async def on_ready():
     game = disnake.Activity(type=disnake.ActivityType.watching, name="chaos | /help")
     await bot.change_presence(activity=game, status=disnake.Status.do_not_disturb)
 
+functionType = type(on_ready)
 
 def main():
     print("Initializing classes/objects")
 
     # Init roles in /classes/roles
-    cwd = os.getcwd()
     for file in os.listdir("classes/roles"):
         path = os.path.join("classes/roles", file)
 
@@ -34,11 +40,22 @@ def main():
 
         try:
             module = importlib.import_module("classes.roles." + module)
-            module.init()
+            for moduleClass in [getattr(module, name) for name in dir(module) if isinstance(getattr(module, name), type) and name.lower() != "faction"]:
+                role = moduleClass()
+
+                # Discover abilities of the role
+
+                for roleAbility in [getattr(module, name) for name in dir(module) if isinstance(getattr(module, name), functionType)]:
+                    if hasattr(roleAbility, "_metadata"):
+                        role.abilities.append(classes.ability.Ability.fromMetadata(roleAbility._metadata, roleAbility))
+
+                classes.role.Role.allRoles.append(role)
+                break
+
         except Exception as e:
             if (config.TEST_MODE):
                 raise e
-            print(f"Could not initialize role in {path}!: {e}")
+            print(f"Could not initialize role in {path}, skipping: {e}")
 
 
     # Init contractions & changelogs
@@ -57,7 +74,10 @@ def main():
 
 
     print("Connecting to Discord")
-    bot.run(config.BETATOKEN)
+    if config.USEBETA:
+        bot.run(config.BETATOKEN)
+    else:
+        bot.run(config.TOKEN)
 
 if __name__ == "__main__":
     main()

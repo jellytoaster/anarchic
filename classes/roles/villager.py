@@ -12,9 +12,10 @@ def init():
     Villager("Villager", Faction.Town)
 
 class Villager(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
+    def __init__(self):
         # imagine being a villager honestly
-        super().__init__(name, faction)
+        super().__init__()
+        self.faction = Faction.Town
         self.investigationResults = investigationResults(False, "Your target is a dedicated to the justice of all evildoers.")
         self.color = 0x7ed321
         self.type = "vanilla"

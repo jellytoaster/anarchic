@@ -4,6 +4,7 @@ import disnake
 import classes.enums
 import copy
 
+# When adding a death reason, you MUST add an embed here!!!!
 deathEmbeds = {classes.enums.DeathReason.Mafia : disnake.Embed(title="**You were attacked by a member of the Mafia**", colour=disnake.Colour(0xd0021b), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/890328238029697044.png?size=80"),
                classes.enums.DeathReason.Jester : disnake.Embed(title="**You could not get over your guilt of lynching the Jester <:jesticon2:889968373612560394>**", colour=disnake.Colour(0xf1cbe2), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/889968373612560394.webp?size=80"),
                classes.enums.DeathReason.Enforcer : disnake.Embed(title="**You were eliminated by a Vigilante**", colour=disnake.Colour(0x7ed321), description="**You have died <:rip:878415658885480468>**").set_thumbnail(url="https://cdn.discordapp.com/emojis/890339050865696798.webp?size=96&quality=lossless"),
@@ -32,6 +33,7 @@ class Player():
         self.externalRoleData = {}
         game.playervar.append(self)
 
+
     def get(id:int, game:Game):
         for player in game.playervar:
             if player.id == id:
@@ -39,14 +41,32 @@ class Player():
         return None
 
     def getPlayersWithRole(roleName:str, game:Game):
-        """Case sensitive!"""
+        """Case sensitive! This gets all players with a specific role name (based on their `__name__`) in a `game`."""
         return [i for i in game.playervar if i.assignedRole.name == roleName]
     
     def getPlayersWithFactions(faction:classes.enums.Faction, game:Game):
         return [i for i in game.playervar if i.assignedRole.faction == faction]
 
-    # Kill player, True if successful and False otherwise.
-    async def kill(self, deathReason:classes.enums.DeathReason, game:Game, force=False):
+    # Kill player, True if successful and False otherwise. WHY DID I NOT DOCSTRING THIS
+    async def kill(self, deathReason:classes.enums.DeathReason, game:Game, force=False) -> bool:
+        """Attempts to kill a player. Will not work if `Player.defended = (None, True)`.
+
+        Parameters
+        ----------
+        deathReason : classes.enums.DeathReason
+            The reason of death. This will show on day deaths and the playe who is dying.
+        
+        game : classes.game.Game
+            please just supply this idk how to explain it but you need this for every method related to the game
+
+        force : bool
+            If the attack is forced, aka bypassing protection
+        
+        
+        Returns
+        ----------
+        result : bool
+            Whether the attack succeded or not"""
         if (self.defended == None or force == True):
 
             # Silence them for good by changing their role to dead

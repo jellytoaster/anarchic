@@ -29,8 +29,9 @@ def canBroadcast(originPlayer, game):
     return originPlayer.playerSelectedAbility == 0
 
 class Mayor(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Town
         self.investigationResults = investigationResults(False, "Your target leads the town in trials.")
         self.color = 0x7ed321
         self.type = "support"

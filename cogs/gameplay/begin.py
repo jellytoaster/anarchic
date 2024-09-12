@@ -35,7 +35,7 @@ def assignRoles(game:classes.game.Game):
                     randomList = []
                     for x in classes.role.Role.allRoles:
                         x:classes.role.Role
-                        if (selection.split()[1].lower() == x.faction.value):
+                        if (selection.split()[1].lower() == x.faction.value): #and x.cannotAppearInRoleGroup == False):
                             randomList.append(x.name)
 
                     finalSelection = random.choice(randomList)
@@ -82,7 +82,33 @@ def fufillsRoleCiteria(cycle, game):
 
 async def sendRoles(game:classes.game.Game):
     for i in game.players:
-        await i.send(embed=player.Player.get(i.id, game).assignedRole.buildEmbed())
+        embed = player.Player.get(i.id, game).assignedRole.buildEmbed()
+
+        roleMsg = None
+        
+        class RoleView(disnake.ui.View):
+            def __init__(self) -> None:
+                super().__init__(timeout=180)
+            
+            interaction = None
+
+            async def on_timeout(self) -> None:
+                for child in self.children:
+                    child.disabled = True
+
+                newEmbed = embed.set_footer(text="This interaction has timed out. Use /role to use the button.")
+                await roleMsg.edit(embed=newEmbed, view=self)
+
+            @disnake.ui.button(label="Investigation Results", emoji="<:magn:1226319132061077624>", style=disnake.ButtonStyle.grey)
+            async def investigationresults(self, button, intera):
+                print(intera.author.id)
+                embed = player.Player.get(intera.author.id, game).assignedRole.buildInvestigationResults()
+                await intera.response.send_message(embed=embed)
+
+                RoleView.interaction = intera
+
+        view = RoleView()
+        roleMsg = await i.send(embed=player.Player.get(i.id, game).assignedRole.buildEmbed(), view=view)
 
 
 async def genChannels(game:classes.game.Game):
@@ -95,9 +121,8 @@ async def genChannels(game:classes.game.Game):
     game.rolePlayer = await utils.createRoleIfNotExist(game.guild, "[Anarchic] Player")
     game.roleDead = await utils.createRoleIfNotExist(game.guild, "[Anarchic] Dead")
 
-    for i in game.guild.members:
-        if (game.rolePlayer in i.roles):
-            await i.remove_roles(game.rolePlayer)
+    await game.rolePlayer.edit(mentionable=False)
+    await game.roleDead.edit(mentionable=False)
 
     for i in game.players:
         i:disnake.Member

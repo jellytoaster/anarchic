@@ -1,4 +1,5 @@
 from classes import enums
+from classes.role import Role
 import string
 import utils
 
@@ -60,6 +61,18 @@ class SetupData():
         if (result == ""):
             return ":x: **None**"
         return result
+    
+    def getMafiaCount(self) -> int:
+        count = 0
+        for role in self.roles:
+            if utils.isContraction(role):
+                if "mafia" in role.lower():
+                    count += 1
+            else:
+                if Role.toRole(role).faction == enums.Faction.Mafia:
+                    count += 1
+
+        return count
     
     def getPresetSetup(name:str):
         for key, value in presetSetups.items():

@@ -46,14 +46,15 @@ async def vengance(targetPlayers:list, originPlayer:classes.player.Player, game)
 async def rest(targetPlayers:list, originPlayer:classes.player.Player, game):
     originPlayer.kill(classes.enums.DeathReason.Headhunter, game, True)
 class Headhunter(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Neutral
         self.investigationResults = investigationResults(False, "Your target sentences the condemned to their fate.")
         self.color = 0x334f64
         self.type = "evil"
         self.order = 10
         self.emoji = "<:hhicon2:891429754643808276>"
-        self.abilities = [classes.ability.Ability(firstTarget, headHunterN1Targetting, -1, "Vengeful", "A random **Townie** <:townicon2:896431548717473812> starts the game as your Target. The **Mayor** <:mayoricon:922566007946629131> cannot be your target this way.", "<:hhicon2:891429754643808276>", "target", utils.notDead, classes.enums.AbilityType.DayOne), classes.ability.Ability(vengance, utils.notMeAndNotDead, -1, "Vengance", "__Astrally__ mark target player. They are now your new __Target__.", "<:hhicon2:891429754643808276>", "target", utils.notDead), classes.ability.Ability(rest, utils.literallyAnyone, 1, "rest", "you win!", "🤓", "h", twoPoints, classes.enums.AbilityType.PassiveEarly, False)]
+        self.abilities = [classes.ability.Ability(firstTarget, headHunterN1Targetting, -1, "Vengeful", "A random **Townie** <:townicon2:896431548717473812> starts the game as your Target. The **Mayor** <:mayoricon:922566007946629131> cannot be your target this way.", "<:hhicon2:891429754643808276>", "target", utils.imNotDead, classes.enums.AbilityType.DayOne), classes.ability.Ability(vengance, utils.notMeAndNotDead, -1, "Vengance", "__Astrally__ mark target player. They are now your new __Target__.", "<:hhicon2:891429754643808276>", "target", utils.imNotDead), classes.ability.Ability(rest, utils.literallyAnyone, 1, "rest", "you win!", "🤓", "h", twoPoints, classes.enums.AbilityType.PassiveEarly, False)]
         self.constants = {"shortDescription": 'A vengeance-seeking outsider who holds a grudge against the town', "winCon" : "Get two of your targets <:lynch:1010226047456915547> **lynched**"}
 
 

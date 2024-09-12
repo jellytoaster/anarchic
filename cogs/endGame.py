@@ -1,6 +1,6 @@
 import disnake
 import asyncio
-import classes.game
+from classes.game import Game
 from disnake.ext import commands
 
 class endGame(commands.Cog):
@@ -9,7 +9,7 @@ class endGame(commands.Cog):
 
     @commands.slash_command(name="end", description="End the current game. Can only be used when an existing game is finished.")
     async def endGame(self, inter:disnake.ApplicationCommandInteraction):
-        currentGame = classes.game.Game.checkForGame(inter.guild)
+        currentGame:Game = Game.checkForGame(inter.guild)
         if (currentGame.finished == False):
             await inter.response.send_message("There has to be a finished game for this command to work.", ephemeral=True)
             return
@@ -27,6 +27,14 @@ class endGame(commands.Cog):
 
         await asyncio.sleep(5)
 
+        for i in currentGame.guild.members:
+            if (currentGame.rolePlayer in i.roles):
+                await i.remove_roles(currentGame.rolePlayer)
+
+        for i in currentGame.guild.members:
+            if (currentGame.roleDead in i.roles):
+                await i.remove_roles(currentGame.roleDead)
+            
         for i in inter.channel.category.channels:
             await i.delete()
 

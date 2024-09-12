@@ -59,9 +59,7 @@ async def dayCycle(game:classes.game.Game):
 
                 i.deathReason = None
 
-        if (embed.fields == None):
-            embed.add_field(name="It seemed to have been a peaceful night", value = "** **",inline=False)
-        elif (len(embed.fields) == 0):
+        if (embed.fields == None or len(embed.fields) == 0):
             embed.add_field(name="It seemed to have been a peaceful night", value = "** **",inline=False)
 
         await game.channelTownSquare.send(embed=embed)

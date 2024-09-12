@@ -24,8 +24,9 @@ async def kill(targetPlayers:list, originPlayer:classes.player.Player, game):
 async def doNothing(targetPlayers:list, originPlayer:classes.player.Player, game):
     pass
 class Mafioso(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Mafia
         self.investigationResults = investigationResults(True, "Your target is the cold blooded hitman of the mafia.")
         self.type = "killing"
         self.color = 0xd0021b

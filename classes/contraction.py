@@ -33,3 +33,17 @@ class Contraction():
         # Neutral Roles
         Contraction("neutral", "", "Random Neutral", "🤷‍♂️")
         Contraction("neutral", "evil", "Neutral Evil", "🪓")
+
+    def generatePossibleRoles(self):
+        from classes.role import Role
+
+        result = []
+        
+        for role in Role.allRoles:
+            role:Role
+            if role.cannotAppearInRoleGroup == False:
+                continue
+            if self.faction.lower() == role.faction.value.lower():
+                result.append(role)
+
+        return result

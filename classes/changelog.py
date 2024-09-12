@@ -2,7 +2,7 @@ import disnake
 
 class Changelog():
     changelogs = {}
-    def __init__(self, version, emoji, title, description, color, highlights:list, adds:list, changes:list, fixes:list) -> None:
+    def __init__(self, version, emoji, title, description, color, highlights:list, adds:list, changes:list, fixes:list, balance:list=[], usable=True) -> None:
         self.emoji = emoji
         self.ver = version
         self.title = title
@@ -13,7 +13,10 @@ class Changelog():
         self.adds = adds
         self.changes = changes
         self.fixes = fixes
+        self.balance = balance
         
+        self.usable = usable
+
         Changelog.changelogs[version] = self
 
     def noPatch(self):
@@ -26,19 +29,21 @@ class Changelog():
             color=disnake.Color(self.color)
         )
         
-        embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421")
+        embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1009910329322512464.webp?size=128&quality=lossless")
 
         def format(icon, items):
             return f"{icon} " + f"\n{icon} ".join(items) if items else ":x: **None**"
 
         if (self.highlights != []):
-            embed.add_field(name="Highlights", value=format('<:highlight:1199861697989586965>', self.highlights), inline=False)
+            embed.add_field(name="💫 Highlights", value=format('<:highlight:1199861697989586965>', self.highlights), inline=False)
         if (self.adds != []):
-            embed.add_field(name="New Features", value=format('<:add:1034558781847261194>', self.adds), inline=False)
+            embed.add_field(name="🎯 New Features", value=format('<:add:1034558781847261194>', self.adds), inline=False)
         if (self.changes != []):
-            embed.add_field(name="Game Changes", value=format('<:change:1034559083627429918>', self.changes), inline=False)
+            embed.add_field(name="🛠️ Game Changes", value=format('<:change:1034559083627429918>', self.changes), inline=False)
         if (self.fixes != []):
-            embed.add_field(name="Bug Fixes", value=format('<:remove:1198401946567049327>', self.fixes), inline=False)
+            embed.add_field(name="🐞 Bug Fixes", value=format('<:remove:1198401946567049327>', self.fixes), inline=False)
+        if (self.balance != []):
+            embed.add_field(name="🛝 Balance Changes", value=format('<:remove:1198401946567049327>', self.balance), inline=False)
 
         return embed
     
@@ -49,7 +54,7 @@ class Changelog():
             color=disnake.Color(self.color)
         )
         
-        embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/zvBfC-Hei3zC-NkTa_MJ1t-lx4Fu6dXoB-5uzicvPYE/https/images-ext-2.discordapp.net/external/EedL1z9T7uNxVlYBIUQzc_rvdcYeTJpDC_4fm7TQZBo/%253Fwidth%253D468%2526height%253D468/https/media.discordapp.net/attachments/765738640554065962/893661449216491540/Anarchic.png?format=webp&quality=lossless&width=421&height=421")
+        embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1009910329322512464.webp?size=128&quality=lossless")
 
         def format(icon, items):
             return f"{icon} " + f"\n{icon} ".join(items) if items else ":x: **None**"
@@ -69,6 +74,11 @@ class Changelog():
         Changelog("1.2.0", "<:loicon2:889673190392078356>", "Investigative Update", "Unleash a package of 5 new investigative roles!", 0xb8e986, 
         ["Who needs the <:copicon2:889672912905322516> **Cop** when you have the <:loicon2:889673190392078356> **Lookout** and <:trackicon:922885543812005949> **Tracker**? These two investigative roles will keep the <:mafia:1007768566789050378> **Mafia** on their toes.","On the other hand, there is the <:frameicon2:890365634913902602> **Framer**, creating counterfeit information with the <:consigicon2:896154845130666084> **Consigliere** and <:recon:1200834864845438977> **Recon** giving information to the Mafia, so watch out!"],
         ["Added Lookout", "Added Tracker", "Added Consigliere", "Added Recon", "Added Framer", "Added `/subalignments`", "Added `/frames`", "Added `/role [role]`"], ["Role embeds have been overhauled to be simpler", "The bot now has a cool looking banner"], ["Fixed visual bug with flavor text"])
+
+        Changelog("1.3.0", "<:mayoricon:922566007946629131>", "Law Enforcement Update", "911", 0x8b572a, 
+        ["Introducing the <:mayoricon:922566007946629131> **Mayor**! They will lead the town to victory, with their increased voting influence!", "Knock knock, the <:jkicon:1226310301574758462> **Jailkeeper**'s here! The <:jkicon:1226310301574758462> **Jailkeeper** can protect someone for one night, while roleblocking them."],
+        ["Added Mayor"], ["Discriminators have been removed because Discord removed them", "Simplified role embeds now have a button to show investigation results"], ["Fixed issue with `/help`", "Missing images from embed thumbnails/images have been restored"], ["Doctor can now heal themselves during the night"], False)
+
 
 
     def getChangelog(version:str):

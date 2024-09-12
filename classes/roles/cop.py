@@ -26,9 +26,11 @@ async def interrogate(targetPlayers:list, originPlayer:classes.player.Player, ga
             await originPlayer.memberObj.send(embed=embed)
 
 class Cop(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
+    def __init__(self):
 
-        super().__init__(name, faction)
+        super().__init__()
+        
+        self.faction = Faction.Town
         self.investigationResults = investigationResults(False, "Your target is the law enforcer of the town.")
         self.color = 0x7ed321
         self.type = "investigative"

@@ -18,11 +18,13 @@ async def doNothing(targetPlayers:list, originPlayer:classes.player.Player, game
 
 
 class Consort(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        
+        self.faction = Faction.Mafia
         self.investigationResults = investigationResults(True, "Your target is a seductive dancer.")
         self.color = 0xd0021b
-        self.promotionOrder = 3
+        self.promotionOrder = 4
         self.type = "support"
         self.order = -1
         self.emoji = "<:consicon2:890336628269281350>"

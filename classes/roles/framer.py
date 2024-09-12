@@ -1,21 +1,16 @@
 
 import utils
 import classes.role as role
-import disnake
 import classes.ability
 import classes.player
-import classes.enums
 from classes.enums import Faction
-from  classes.investigationResults import investigationResults
-
-def init():
-    Framer("Framer", Faction.Mafia)
+from classes.investigationResults import investigationResults
 
 async def frame(targetPlayers:list, originPlayer:classes.player.Player, game):
     targetPlayer:classes.player.Player = targetPlayers[0]
     targetPlayer.assignedRole.investigationResults.copSuspicious = True
     
-    if (len(game.mafNightKill) != 0):
+    if (len(game.mafNightKill) > 0):
         targetPlayer.assignedRole.investigationResults.trackerTargetted = [game.mafNightKill[0]]
 
         for i in game.playervar:
@@ -30,9 +25,10 @@ async def doNothing(targetPlayers:list, originPlayer:classes.player.Player, game
     return
 
 class Framer(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
+    def __init__(self):
 
-        super().__init__(name, faction)
+        super().__init__()
+        self.faction = Faction.Mafia
         self.investigationResults = investigationResults(True, "Your target is a skilled counterfeiter who fabricates information.")
         self.color = 0xd0021b
         self.promotionOrder = 1

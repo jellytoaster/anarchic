@@ -15,8 +15,9 @@ async def doNothing(targetPlayers:list, originPlayer:classes.player.Player, game
     return
 
 class Associate(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Mafia
         self.investigationResults = investigationResults(True, "Your target is a loyal goon affiliated with the Mafia.")
         self.color = 0xd0021b
         self.promotionOrder = 100

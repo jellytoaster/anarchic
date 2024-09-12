@@ -34,10 +34,10 @@ async def nightCycle(game:classes.game.Game):
     # Check if the mafioso is gone
     yesMafioso = False
     for i in game.playervar:
-        if (i.assignedRole.name == "Mafioso"):
+        if (i.assignedRole.name.lower() == "mafioso"):
             yesMafioso == True
 
-    if (yesMafioso != True):
+    if (yesMafioso == False):
         # Get members of the mafia
         mafiaPlayers = []
         for i in game.playervar:
@@ -52,6 +52,8 @@ async def nightCycle(game:classes.game.Game):
 
         embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/891739940055052328.png?size=80")
         embed.set_footer(text="Good luck", icon_url=promotedPlayer.memberObj.display_avatar.url)
+
+        await game.channelMafia.send(embed=embed,content=promotedPlayer.memberObj.mention)
 
 
     pins = await game.channelTownSquare.pins()
@@ -142,11 +144,11 @@ async def sendTargetingEmbeds(game:classes.game.Game):
                 embed = disnake.Embed(title="**You were occupied!**", colour=disnake.Colour(0xffb6f0), description="**You ended up not performing your ability tonight.**")
 
                 embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009181021859749970/1009885085002104933/IMG_0038-removebg-preview.png")
-                embed.set_footer(text="Use `/status` to learn what distraction does", icon_url=i.memberObj.display_avatar.url)
+                embed.set_footer(text="Use `/status` to learn what distraction does (not inplemented yet sorry)", icon_url=i.memberObj.display_avatar.url)
                 await i.memberObj.send(embed=embed)
                 continue
 
-            abilities = [x for x in i.assignedRole.abilities if x.type == classes.enums.AbilityType.Night] 
+            abilities = [x for x in i.assignedRole.abilities] 
             await abilities[i.playerSelectedAbility].invokeMethod(i.nightTargettedPlayers, i, game)
 
         await asyncio.sleep(5)
@@ -163,7 +165,7 @@ async def sendAbilitySelectionEmbed(originPlayer:classes.player.Player, game, ti
     embed.set_footer(text="Use the dropdown to select an ability!", icon_url=originPlayer.memberObj.display_avatar.url)
 
     # generate ability list
-    abilities = [x for x in originPlayer.assignedRole.abilities if x.type == classes.enums.AbilityType.Night]
+    abilities = [x for x in originPlayer.assignedRole.abilities if x.type == classes.enums.AbilityType.Night and utils.chargeUsable(x.charges) and x.usableFunction(originPlayer, game) == True]
     for ability in abilities:
         embed.add_field(name=f"<:moon:934556372421451776> **{ability.name}** | {utils.chargeCountSimpleSimple(ability.charges)}", value=ability.description, inline=False)
 
@@ -267,33 +269,49 @@ async def sendTargetingEmbed(i:classes.player.Player, game, timestamp, playerSel
             options = []
 
             for x in allowedPlayers:
+                x:classes.player.Player
                 options.append(disnake.SelectOption(label=x.memberObj.name, description=f"Click to target {x.memberObj.name}", emoji=abilities[playerSelectedAbility].emoji, value=str(x.memberObj.id)))
 
             options.append(disnake.SelectOption(label="Do nothing", value="abstain", description="Do nothing tonight", emoji="❌"))
 
-            super().__init__(placeholder="Select a player to target...", min_values=1, max_values=1, options=options)
+            super().__init__(placeholder="Select a player to target...", min_values=abilities[playerSelectedAbility].requiredTargets, max_values=abilities[playerSelectedAbility].requiredTargets, options=options)
 
         async def callback(self, interaction: MessageInteraction):
             selfPlayer:classes.player.Player = classes.player.Player.get(interaction.author.id, game)
 
-            if (self.values[0] == "abstain"):
-
+            if ("abstain" in self.values): # If abstaining is any of the options just abstain
                 embed = disnake.Embed(title=f"**You decide to do nothing tonight**", colour=disnake.Colour(0xbbf6ff))
                 embed.set_footer(text="You can change your action", icon_url=interaction.author.display_avatar.url)
                 await interaction.response.send_message(embed=embed)
                 selfPlayer.nightTargettedPlayers.clear()
             else:
-                targettedPlayer:classes.player.Player = classes.player.Player.get(int(self.values[playerSelectedAbility]), game)
+                if len(self.values) > 1: # If there are more than 1 player selected, send a special embed
+                    targets:list[classes.player.Player] = []
+                    
+                    for target in self.values:
+                        targets.append(classes.player.Player.get(int(target), game))
 
-                selfPlayer.nightTargettedPlayers.clear()
-                selfPlayer.nightTargettedPlayers.append(targettedPlayer)
+                    selfPlayer.nightTargettedPlayers.clear()
+                    selfPlayer.nightTargettedPlayers.append(targettedPlayer)
 
-                embed = disnake.Embed(title=f"**You decide to {abilities[playerSelectedAbility].flavorText} {targettedPlayer.memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
+                    embed = disnake.Embed(title=f"**You decide to {abilities[playerSelectedAbility].flavorText} {len(targets)} players tonight**", colour=disnake.Colour(0xbbf6ff))
 
-                embed.set_thumbnail(url=targettedPlayer.memberObj.display_avatar.url)
-                embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=interaction.author.display_avatar.url)
+                    embed.set_thumbnail(url=targets[0].memberObj.display_avatar.url)
+                    embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=interaction.author.display_avatar.url)
 
-                await interaction.response.send_message(embed=embed)
+                    await interaction.response.send_message(embed=embed)
+                else: # Else, do stuff normally
+                    targettedPlayer:classes.player.Player = classes.player.Player.get(int(self.values[0]), game)
+
+                    selfPlayer.nightTargettedPlayers.clear()
+                    selfPlayer.nightTargettedPlayers.append(targettedPlayer)
+
+                    embed = disnake.Embed(title=f"**You decide to {abilities[playerSelectedAbility].flavorText} {targettedPlayer.memberObj.name} tonight**", colour=disnake.Colour(0xbbf6ff))
+
+                    embed.set_thumbnail(url=targettedPlayer.memberObj.display_avatar.url)
+                    embed.set_footer(text=utils.chargeCount(abilities[playerSelectedAbility].charges), icon_url=interaction.author.display_avatar.url)
+
+                    await interaction.response.send_message(embed=embed)
 
 
     class TargetingDropdownView(disnake.ui.View):

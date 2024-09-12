@@ -29,8 +29,9 @@ async def look(targetPlayers:list, originPlayer:classes.player.Player, game):
             await originPlayer.memberObj.send(embed=embed)
 
 class Lookout(role.Role):
-    def __init__(self, name: str, faction: classes.enums.Faction):
-        super().__init__(name, faction)
+    def __init__(self):
+        super().__init__()
+        self.faction = Faction.Town
         self.investigationResults = investigationResults(False, "Your target is a sleepless nightwatcher.")
         self.color = 0x7ed321
         self.type = "investigative"

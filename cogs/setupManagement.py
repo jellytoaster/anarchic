@@ -52,7 +52,7 @@ class setupManagement(commands.Cog):
             return
         
         if (amount > 10):
-            await inter.response.send_message("Don't you think that's too much?", ephemeral=True)
+            await inter.response.send_message("Too much of that role has been added.", ephemeral=True)
             return
 
         game.setupData.addRole(role.lower(), amount)
@@ -287,12 +287,19 @@ class setupManagement(commands.Cog):
 
     @preset.autocomplete("name")
     async def presetAutocomplete(inter:disnake.ApplicationCommandInteraction, userInput:str):
-        userInput=userInput.lower()
+        userInput=userInput.lower() # there shouldnt be more than 25 presets :skull:
         return [string.capwords(setup.replace("~HS", "")) for setup in setupData.presetSetups.keys() if userInput in setup.lower()]
     
     @setup_addRole.autocomplete("role")
     @setup_removeRole.autocomplete("role")
     async def autoCompleteRole(inter, input):
         if (input == ""):
-            return [string.capwords(e.name) for e in classes.role.Role.allRoles] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if e.show == True] 
-        return [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if input.lower() in e.display_name.lower() and e.show == True] 
+            res = [string.capwords(e.name) for e in classes.role.Role.allRoles] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if e.show == True]
+            while len(res) > 25:
+                res.pop()
+            return res
+        
+        res = [string.capwords(e.name) for e in classes.role.Role.allRoles if input.lower() in e.name.lower()] + [string.capwords(e.display_name) for e in classes.contraction.Contraction.allContractions if input.lower() in e.display_name.lower() and e.show == True] 
+        while len(res) > 25:
+            res.pop()
+        return res
